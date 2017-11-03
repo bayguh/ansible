@@ -23,6 +23,11 @@
   name: anyenv
   version: master
 
+# https://galaxy.ansible.com/andrewrothstein/packer/
+- src: andrewrothstein.packer
+  name: packer
+  version: master
+
 # https://galaxy.ansible.com/mackerelio/mackerel-agent/
 - src: mackerelio.mackerel-agent
   name: mackerel

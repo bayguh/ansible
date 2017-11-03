@@ -1,0 +1,12 @@
+# ansibleのバージョン
+install_ansible_version: 2.4.1
+
+# pip設定
+ansible_install_pip_packages:
+  - name: ansible
+    version: "{{ install_ansible_version }}"
+    executable: "{{ install_pip_executable }}"
+
+# packerのバージョン
+install_packer_version: 1.1.1
+install_packer_checksum: "sha256:e407566e2063ac697e0bbf6f2dd334be448d58bed93f44a186408bf1fc54c552"

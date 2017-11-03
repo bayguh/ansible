@@ -38,6 +38,8 @@ install_ruby_version: "2.4.2"
 # pip設定
 install_pip_executable: "/opt/anyenv/envs/pyenv/shims/pip"
 install_pip_packages:
+  - name: setuptools
+    executable: "{{ install_pip_executable }}"
   - name: google_compute_engine
     executable: "{{ install_pip_executable }}"
   - name: python-consul

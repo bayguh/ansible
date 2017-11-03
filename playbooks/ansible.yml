@@ -1,0 +1,16 @@
+---
+
+- name: Ansible Server Tasks
+  hosts: ansible
+  become: true
+  tags: ansible
+  roles:
+    # pipパッケージインストール
+    - role: ../roles/pip
+      pip_install_packages: "{{ ansible_install_pip_packages }}"
+      tags: pip
+
+    - role: ../roles/galaxy/packer
+      packer_ver : "{{ install_packer_version }}"
+      packer_checksum: "{{ install_packer_checksum }}"
+      tags: packer

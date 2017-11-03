@@ -4,9 +4,9 @@
 - import_playbook: playbooks/common/pre_task.yml
   tags: pre_task
 
-# # 各サーバタスク呼び出し
-# - import_playbook: playbooks/{{ server }}.yml
-#   tags: main_task
+# 各サーバタスク呼び出し
+- import_playbook: playbooks/{{ server }}.yml
+  tags: main_task
 
 # 共通postタスク呼び出し
 - import_playbook: playbooks/common/post_task.yml
