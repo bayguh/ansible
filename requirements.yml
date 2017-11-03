@@ -1,32 +1,32 @@
 # https://galaxy.ansible.com/linuxhq/selinux/
 - src: linuxhq.selinux
   name: selinux
-  # version: master
+  version: master
 
 # https://galaxy.ansible.com/geerlingguy/ntp/
 - src: geerlingguy.ntp
   name: ntp
-  # version: 1.5.2
+  version: 1.5.2
 
 # https://galaxy.ansible.com/sansible/users_and_groups/
 - src: sansible.users_and_groups
   name: users_and_groups
-  # version: v1.4.1
+  version: v1.4.1
 
 # https://galaxy.ansible.com/GROG/package/
 - src: GROG.package
   name: package
-  # version: v1.2.4
+  version: v1.2.4
 
 # https://galaxy.ansible.com/officel/anyenv/
 - src: officel.anyenv
   name: anyenv
-  # version: master
+  version: master
 
 # https://galaxy.ansible.com/mackerelio/mackerel-agent/
 - src: mackerelio.mackerel-agent
   name: mackerel
-  # version: v0.7.0
+  version: v0.7.0
 
 
 # 修正して使用(roles以下)=======================================================
