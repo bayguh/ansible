@@ -1,0 +1,84 @@
+# リブートフラグ(リブートが必要なサーバ、タイミング時に使用)
+reboot_flag: false
+
+# ===========================================================
+
+# 共通パッケージのインストール
+install_common_package_list:
+  - name: tmux
+    state: latest
+  - name: git
+    state: latest
+  - name: tree
+    state: latest
+  - name: htop
+    state: latest
+  - name: zlib-devel
+  - name: bzip2
+  - name: bzip2-devel
+  - name: readline-devel
+  - name: sqlite-devel
+  - name: openssl-devel
+install_common_package_list_group:
+  - name: "@Development Tools"
+
+# 共通envのインストール
+install_common_env_list:
+  - pyenv
+  - rbenv
+  - goenv
+  - ndenv
+  - phpenv
+
+# pythonのバージョン
+install_python_version: "2.7.14"
+# rubyのバージョン
+install_ruby_version: "2.4.2"
+
+# pip設定
+install_pip_executable: "/opt/anyenv/envs/pyenv/shims/pip"
+install_pip_packages:
+  - name: google_compute_engine
+    executable: "{{ install_pip_executable }}"
+  - name: python-consul
+    executable: "{{ install_pip_executable }}"
+
+# ===========================================================
+
+# consulをインストールするかどうか
+consul_install_flag: false
+
+# consul設定
+install_consul_version: 1.0.0
+install_consul_encrypt_key: "jPHxtd3WAIDpNUKTwCa+Uw=="
+install_consul_bind_ip: "0.0.0.0"
+install_consul_disable_remote_exec: false
+install_consul_datacenter: "bayguh"
+install_consul_node_type: "client"
+install_consul_nodes:
+  - 'consul0001'
+
+# google SDKをインストールするかどうか
+gcloud_install_flag: true
+
+# google SDK設定
+install_google_cloud_sdk_version: 170.0.1
+install_google_cloud_sdk_sha256sum: a09ff738ea9b3c9af906ee42e8ded48b84388574944d11406ba0cec6b2acdc89
+
+# ===========================================================
+
+# mackerelの設定をするかどうか
+mackerel_flag: true
+
+# mackerel-agent-apikey
+install_mackerel_agent_apikey: "cqJtSfEzzyee3UPb9znBYvbE21EtNtmp59FDuv6JR4Lg"
+install_mackerel_agent_roles: ["{{ env_variable }}:{{ server }}"]
+
+# mackerel agent設定
+install_mackerel_agent_plugins:
+  mackerel-plugin-inode: "/usr/local/bin/mackerel-plugin-inode"
+  mackerel-plugin-linux: "/usr/local/bin/mackerel-plugin-linux"
+  mackerel-plugin-mailq: "/usr/local/bin/mackerel-plugin-mailq -M postfix"
+
+install_mackerel_check_plugins:
+  check-ntpoffset: "/usr/local/bin/check-ntpoffset -w=500"

@@ -1,0 +1,13 @@
+---
+
+limits_enabled: yes
+limits_path: /etc/security/limits.d/ansible_limits.conf
+
+# See http://linux.die.net/man/5/limits.conf for description
+limits_limits: []
+
+limits_sysctl_ignore: false
+
+limits_sysctl: []
+
+limits_pamd_files: []

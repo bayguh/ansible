@@ -1,0 +1,18 @@
+---
+
+# 共通preタスク呼び出し
+- import_playbook: playbooks/common/pre_task.yml
+  tags: pre_task
+
+# # 各サーバタスク呼び出し
+# - import_playbook: playbooks/{{ server }}.yml
+#   tags: main_task
+
+# 共通postタスク呼び出し
+- import_playbook: playbooks/common/post_task.yml
+  tags: post_task
+
+# 再起動タスク呼び出し
+- import_playbook: playbooks/common/reboot_task.yml
+  when: reboot_flag
+  tags: reboot_task

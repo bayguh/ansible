@@ -1,0 +1,6 @@
+.idea
+*.iml
+.vagrant
+roles
+.kitchen
+.kitchen.local.yml

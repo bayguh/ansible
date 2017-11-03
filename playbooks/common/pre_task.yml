@@ -1,0 +1,108 @@
+---
+
+# 必ず実行するもの
+- name: Common Role Execute
+  hosts: '{{ server }}'
+  become: true
+  tags: common_role
+  roles:
+    # selinuxの停止
+    - { role: ../../roles/galaxy/selinux, selinux_state: disabled, tags: selinux }
+
+    # ファイルディスクリプタの設定
+    # libselinux-pythonのインストールが必要
+    - role: ../../roles/limits
+      limits_limits: ["root  soft  nofile  16384", "root hard  nofile  32768", "*  soft  nofile  8192", "* hard  nofile  16384"]
+      tags: limits
+
+    # timezone設定
+    - { role: ../../roles/galaxy/ntp, ntp_timezone: Asia/Tokyo, tags: ntp }
+
+    # 作業ユーザの作成
+    - role: ../../roles/galaxy/users_and_groups
+      users_and_groups:
+        groups:
+          - name: operation_user
+        users:
+          - name: operation_user
+            group: operation_user
+            ssh_key: ../../keys/ssh/operation_user/id_rsa.pub
+        sudoers: []
+        whitelist_groups: []
+        authorized_keys_dir: ~
+      tags: users_and_groups
+
+    # 共通パッケージのインストール
+    - { role: ../../roles/galaxy/package, package_list: "{{ install_common_package_list }}", package_list_group: "{{ install_common_package_list_group }}", tags: package }
+
+    # anyenvのインストール
+    - { role: ../../roles/galaxy/anyenv, install_env: "{{ install_common_env_list }}", tags: anyenv }
+
+
+# フラグをみて実行するもの
+- name: Sub Common Role Execute
+  hosts: '{{ server }}'
+  become: true
+  tags: sub_common_role
+  roles:
+    # consulのインストール
+    - role: ../../roles/consul
+      when: consul_install_flag
+      consul_version: "{{ install_consul_version }}"
+      consul_encrypt_key: "{{ install_consul_encrypt_key }}"
+      consul_logs_dir: /var/log/consul
+      consul_bind_ip: "{{ install_consul_bind_ip }}"
+      consul_datacenter: "{{ install_consul_datacenter }}"
+      consul_enable_syslog: true
+      consul_disable_remote_exec: "{{ install_consul_disable_remote_exec }}"
+      consul_node_type: "{{ install_consul_node_type }}"
+      consul_nodes: "{{ install_consul_nodes }}"
+      tags: consul
+
+    # google sdkのインストール
+    - role: ../../roles/gcloud
+      when: gcloud_install_flag
+      google_cloud_sdk_version: "{{ install_google_cloud_sdk_version }}"
+      google_cloud_sdk_sha256sum: "{{ install_google_cloud_sdk_sha256sum }}"
+      tags: gcloud
+
+
+# common shell実行
+- name: Execute Common Shell
+  hosts: '{{ server }}'
+  become: true
+  tags: common_shll
+  tasks:
+    # python global設定
+    - name: Python setting
+      shell: >
+        export PYENV_ROOT="/opt/anyenv/envs/pyenv";
+        export PATH="$PYENV_ROOT/bin:$PATH";
+        eval "$(pyenv init -)";
+
+        pyenv install {{ install_python_version }};
+        pyenv global {{ install_python_version }};
+      changed_when: false
+      tags: python
+
+    # ruby global設定
+    - name: Ruby setting
+      shell: >
+        export RBENV_ROOT="/opt/anyenv/envs/rbenv";
+        export PATH="$RBENV_ROOT/bin:$PATH";
+        eval "$(rbenv init -)";
+
+        rbenv install {{ install_ruby_version }};
+        rbenv global {{ install_ruby_version }};
+      changed_when: false
+      tags: rbenv
+
+
+# common python設定
+- name: Common Python Setting
+  hosts: '{{ server }}'
+  become: true
+  tags: python
+  roles:
+    # pipパッケージインストール
+    - { role: ../../roles/pip, pip_install_packages: "{{ install_pip_packages }}", tags: pip }

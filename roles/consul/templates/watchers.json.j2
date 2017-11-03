@@ -1,0 +1,9 @@
+{
+  "watches": [
+    {
+      "type": "checks",
+      "state": "critical",
+      "handler": "{{ consul_script_dir }}/redeploy_service.sh >>{{ consul_log_dir }}/watchers.log"
+    }
+  ]
+}

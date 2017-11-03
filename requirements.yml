@@ -1,0 +1,70 @@
+# https://galaxy.ansible.com/linuxhq/selinux/
+- src: linuxhq.selinux
+  name: selinux
+  # version: master
+
+# https://galaxy.ansible.com/geerlingguy/ntp/
+- src: geerlingguy.ntp
+  name: ntp
+  # version: 1.5.2
+
+# https://galaxy.ansible.com/sansible/users_and_groups/
+- src: sansible.users_and_groups
+  name: users_and_groups
+  # version: v1.4.1
+
+# https://galaxy.ansible.com/GROG/package/
+- src: GROG.package
+  name: package
+  # version: v1.2.4
+
+# https://galaxy.ansible.com/officel/anyenv/
+- src: officel.anyenv
+  name: anyenv
+  # version: master
+
+# https://galaxy.ansible.com/mackerelio/mackerel-agent/
+- src: mackerelio.mackerel-agent
+  name: mackerel
+  # version: v0.7.0
+
+
+# 修正して使用(roles以下)=======================================================
+
+# # https://galaxy.ansible.com/Stouts/limits/
+# - src: Stouts.limits
+#   name: limits
+#   version: 1.2.3
+
+# # https://galaxy.ansible.com/wunzeco/consul/
+# - src: wunzeco.consul
+#   name: consul
+#   version: v1.3
+
+# # https://galaxy.ansible.com/rfhayashi/gcloud/
+# - src: rfhayashi.gcloud
+#   name: gcloud
+#   version: 0.5
+
+# # https://galaxy.ansible.com/geerlingguy/pip/
+# - src: geerlingguy.pip
+#   name: pip
+#   version: 1.1.0
+
+# ==========================================================================
+
+
+# 使用したことがある ===========================================================
+
+# # https://galaxy.ansible.com/linuxhq/postfix/
+# - src: linuxhq.postfix
+#   name: postfix
+#   version: master
+
+# # https://galaxy.ansible.com/jtyr/yumrepo/
+# - src: jtyr.yumrepo
+#   name: yumrepo
+#   version: master
+
+# ==========================================================================
+

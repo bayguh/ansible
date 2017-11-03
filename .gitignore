@@ -1,0 +1,11 @@
+*.retry
+roles/galaxy/*
+!roles/galaxy/.gitkeep
+access_key
+access_key.pub
+certificate.pem
+certificate.crt
+chain_certificate.pem
+private.key
+.DS_Store
+id_rsa*

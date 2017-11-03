@@ -1,0 +1,21 @@
+---
+
+# 最後に実行するタスク
+- name: Post Task Execute
+  hosts: '{{ server }}'
+  become: true
+  tags: post_task
+  roles:
+    # mackerelインストール
+    - role: ../../roles/galaxy/mackerel
+      when: mackerel_flag
+      mackerel_agent_apikey: "{{ install_mackerel_agent_apikey }}"
+      mackerel_agent_roles: "{{ install_mackerel_agent_roles }}"
+      mackerel_use_plugins: yes
+      mackerel_agent_plugins: "{{ install_mackerel_agent_plugins }}"
+      mackerel_check_plugins: "{{ install_mackerel_check_plugins }}"
+      tags: mackerel
+
+    # datadogインストール
+
+    # newrelicインストール
