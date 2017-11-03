@@ -48,6 +48,8 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   ├── dev.ini
 │   ├── group_vars
 │   │   ├── all.yml
+│   │   ├── ansible.yml
+│   │   ├── ladder.yml
 │   │   ├── dev
 │   │   │   └── dev.yml
 │   │   ├── prd
@@ -69,6 +71,8 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   │       └── id_rsa.pub
 │   └── ssl
 ├── playbooks
+│   ├── ansible.yml
+│   ├── ladder.yml
 │   └── common
 │       ├── post_task.yml
 │       ├── pre_task.yml

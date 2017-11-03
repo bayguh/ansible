@@ -1,0 +1,23 @@
+# mysql rpm
+install_mysql_repo_rpm: "https://dev.mysql.com/get/mysql57-community-release-el6-11.noarch.rpm"
+
+# mysqlメジャーバージョン
+install_mysql_major_version: "5.7"
+
+# mysqlバージョン
+install_mysql_version: "{{ install_mysql_major_version }}.18"
+
+# mysqlパッケージ
+install_mysql_package: "mysql-community-client-{{ install_mysql_version }}"
+
+# インストールパッケージ
+ladder_install_package_list:
+  - name: redis
+  - name: telnet
+  - name: "{{ install_mysql_package }}"
+
+# mackerel設定
+install_mackerel_check_plugins:
+  check-ntpoffset: "/usr/local/bin/check-ntpoffset -w=500"
+
+  check-procs-sshd: "/usr/local/bin/check-procs --pattern /usr/sbin/sshd"

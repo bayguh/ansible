@@ -1,0 +1,42 @@
+---
+
+- name: Ladder Server Tasks
+  hosts: ladder
+  become: true
+  tags: ladder
+  pre_tasks:
+    - name: Install the MySQL repo.
+      yum:
+        name: "{{ install_mysql_repo_rpm }}"
+        state: present
+      when: ansible_os_family == "RedHat"
+      tags: mysql
+
+  roles:
+    - role: ../roles/galaxy/package
+      package_list: "{{ ladder_install_package_list }}"
+      tags: package
+
+    - role: ../roles/galaxy/users_and_groups
+      users_and_groups:
+        groups:
+          - name: "operation_group"
+        users: []
+        sudoers:
+          - name: operation_user
+            user: "%operation_group"
+            runas: "ALL=(ALL)"
+            commands: "NOPASSWD: /bin/su - operation_user"
+        whitelist_groups: []
+        authorized_keys_dir: ~
+      tags: sudoers
+
+  tasks:
+    - name: Upload id_rsa
+      copy:
+        src: ../keys/ssh/operation_user/id_rsa
+        dest: "/home/operation_user/.ssh/id_rsa"
+        owner: "operation_user"
+        group: "operation_user"
+        mode: 0600
+      tags: ssh_key
