@@ -51,6 +51,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   │   ├── ansible.yml
 │   │   ├── consul.yml
 │   │   ├── ladder.yml
+│   │   ├── mail.yml
 │   │   ├── dev
 │   │   │   └── dev.yml
 │   │   ├── prd
@@ -75,6 +76,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   ├── ansible.yml
 │   ├── consul.yml
 │   ├── ladder.yml
+│   ├── mail.yml
 │   └── common
 │       ├── post_task.yml
 │       ├── pre_task.yml

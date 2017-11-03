@@ -28,6 +28,11 @@
   name: packer
   version: master
 
+# https://galaxy.ansible.com/linuxhq/postfix/
+- src: linuxhq.postfix
+  name: postfix
+  version: master
+
 # https://galaxy.ansible.com/mackerelio/mackerel-agent/
 - src: mackerelio.mackerel-agent
   name: mackerel
@@ -60,11 +65,6 @@
 
 
 # 使用したことがある ===========================================================
-
-# # https://galaxy.ansible.com/linuxhq/postfix/
-# - src: linuxhq.postfix
-#   name: postfix
-#   version: master
 
 # # https://galaxy.ansible.com/jtyr/yumrepo/
 # - src: jtyr.yumrepo

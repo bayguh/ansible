@@ -1,0 +1,12 @@
+---
+
+- name: Mail Server Tasks
+  hosts: mail
+  become: true
+  tags: mail
+  roles:
+    # リレーホスト設定
+    - role: ../roles/galaxy/postfix
+      postfix_inet_interfaces: [ 'all' ]
+      postfix_mynetworks: [ '0.0.0.0/0' ]
+      postfix_relayhost: "{{ setting_postfix_relayhost }}"

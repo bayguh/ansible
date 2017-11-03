@@ -1,0 +1,11 @@
+# リレー先ホスト
+setting_postfix_relayhost: xxx.xxx.xxx.xxx:25
+
+# mackerel設定
+install_mackerel_check_plugins:
+  check-ntpoffset: "/usr/local/bin/check-ntpoffset -w=500"
+
+  check-procs-postfix: "/usr/local/bin/check-procs --pattern /usr/libexec/postfix/master"
+
+  check-tcp-25: "/usr/local/bin/check-tcp -p 25"
+
