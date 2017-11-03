@@ -49,6 +49,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   ├── group_vars
 │   │   ├── all.yml
 │   │   ├── ansible.yml
+│   │   ├── consul.yml
 │   │   ├── ladder.yml
 │   │   ├── dev
 │   │   │   └── dev.yml
@@ -72,6 +73,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   └── ssl
 ├── playbooks
 │   ├── ansible.yml
+│   ├── consul.yml
 │   ├── ladder.yml
 │   └── common
 │       ├── post_task.yml
@@ -79,7 +81,6 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │       └── reboot_task.yml
 ├── requirements.yml
 ├── roles
-│   ├── consul
 │   ├── galaxy
 │   │   ├── anyenv
 │   │   ├── mackerel
@@ -88,6 +89,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   │   ├── packer
 │   │   ├── selinux
 │   │   └── users_and_groups
+│   ├── consul
 │   ├── gcloud
 │   ├── limits
 │   └── pip

@@ -1,0 +1,7 @@
+---
+
+- name: Consul Server Tasks
+  hosts: consul
+  become: true
+  tags: consul
+  roles: []

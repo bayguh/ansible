@@ -48,7 +48,7 @@ install_pip_packages:
 # ===========================================================
 
 # consulをインストールするかどうか
-consul_install_flag: false
+consul_install_flag: true
 
 # consul設定
 install_consul_version: 1.0.0

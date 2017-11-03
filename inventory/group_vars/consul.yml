@@ -1,0 +1,12 @@
+# consul設定
+install_consul_node_type: "server"
+
+# mackerel設定
+install_mackerel_check_plugins:
+  check-ntpoffset: "/usr/local/bin/check-ntpoffset -w=500"
+
+  check-procs-consul: "/usr/local/bin/check-procs --pattern /usr/local/bin/consul"
+
+  check-tcp-8300: "/usr/local/bin/check-tcp -p 8300"
+  check-tcp-8301: "/usr/local/bin/check-tcp -p 8301"
+
