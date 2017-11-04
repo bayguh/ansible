@@ -89,24 +89,22 @@
   when: pkg|changed or not bin.stat.exists
   notify: Restart consul
 
-- name: Create consul server config file
+- name: Create consul config file
   template:
-    src:   server_config.json.j2
-    dest:  "{{ consul_conf_dir }}/server/config.json"
+    src:   "{{ consul_node_type }}_config.json.j2"
+    dest:  "{{ consul_conf_dir }}/{{ consul_node_type }}/config.json"
     owner: root
     group: root
     mode:  0644
-  when: consul_node_type == 'server'
   notify: Restart consul
 
-- name: Create consul client config file
+- name: Create consul service config file
   template:
-    src:   client_config.json.j2
-    dest:  "{{ consul_conf_dir }}/client/config.json"
+    src:   service_config.json.j2
+    dest:  "{{ consul_conf_dir }}/{{ consul_node_type }}/service_config.json"
     owner: root
     group: root
     mode:  0644
-  when: consul_node_type == 'client'
   notify: Restart consul
 
 - name: Install consul scripts
@@ -118,13 +116,9 @@
     mode:  0755
   with_items: "{{ consul_scripts }}"
 
-- name: Create watchers service definition server
-  template: src=watchers.json.j2 dest={{ consul_conf_dir }}/server/watchers.json mode=0644
-  when: consul_node_type == 'server' and watcher_flag
-
-- name: Create watchers service definition client
-  template: src=watchers.json.j2 dest={{ consul_conf_dir }}/client/watchers.json mode=0644
-  when: consul_node_type == 'client' and watcher_flag
+- name: Create watchers service definition
+  template: src=watchers.json.j2 dest={{ consul_conf_dir }}/{{ consul_node_type }}/watchers.json mode=0644
+  when: watcher_flag
 
 - name: Create consul upstart script
   template:

@@ -1,0 +1,94 @@
+---
+- name: Ensure default user is present.
+  mysql_user:
+    name: "{{ mysql_user_name }}"
+    host: 'localhost'
+    password: "{{ mysql_user_password }}"
+    priv: '*.*:ALL,GRANT'
+    state: present
+  when: mysql_user_name != mysql_root_username
+
+# Has to be after the password assignment, for idempotency.
+- name: Copy user-my.cnf file with password credentials.
+  template:
+    src: "user-my.cnf.j2"
+    dest: "{{ mysql_user_home }}/.my.cnf"
+    owner: "{{ mysql_user_name }}"
+    mode: 0600
+  when: mysql_user_name != mysql_root_username and (mysql_install_packages | bool or mysql_user_password_update)
+
+- name: Create mysql_root_home directory
+  file:
+    path: "{{ mysql_root_home }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  when: mysql_install_packages | bool or mysql_root_password_update
+
+# Has to be after the root password assignment, for idempotency.
+- name: Copy .my.cnf file with root password credentials.
+  template:
+    src: "root-my.cnf.j2"
+    dest: "{{ mysql_root_home }}/.my.cnf"
+    owner: root
+    group: root
+    mode: 0600
+  when: mysql_install_packages | bool or mysql_root_password_update
+
+- name: Delete symlink
+  command: 'unlink /root/.my.cnf'
+  changed_when: false
+  failed_when: false
+
+- name: Disallow root login remotely
+  command: 'mysql -NBe "{{ item }}"'
+  with_items:
+    - DELETE FROM mysql.user WHERE User='{{ mysql_root_username }}' AND Host NOT IN ('localhost', '127.0.0.1', '::1')
+  changed_when: false
+  when: mysql_install_packages and create_mysql_data_dir.changed
+
+- name: Get list of hosts for the root user.
+  command: mysql -NBe "SELECT Host FROM mysql.user WHERE User = '{{ mysql_root_username }}' ORDER BY (Host='localhost') ASC"
+  register: mysql_root_hosts
+  changed_when: false
+  check_mode: no
+  when: mysql_install_packages and mysql_root_password_update and create_mysql_data_dir.changed
+
+# Set root password for MySQL
+- name: Update MySQL root password for localhost root account
+  shell: >
+    mysql -NBe
+    'SET GLOBAL validate_password_length=4;
+    SET GLOBAL validate_password_policy=LOW;
+    SET PASSWORD FOR "{{ mysql_root_username }}"@"{{ item }}" = PASSWORD("{{ mysql_root_password }}");'
+  with_items: "{{ mysql_root_hosts.stdout_lines|default([]) }}"
+  when: mysql_install_packages and mysql_root_password_update and create_mysql_data_dir.changed
+  changed_when: false
+
+- name: Create Smlink .my.cnf
+  file:
+    path: /root/.my.cnf
+    src: "{{ mysql_root_home }}/.my.cnf"
+    state: link
+    force: yes
+    owner: root
+    group: root
+    mode: 0755
+  changed_when: false
+
+- name: Get list of hosts for the anonymous user.
+  command: mysql --defaults-extra-file="{{ mysql_root_home }}"/.my.cnf -NBe 'SELECT Host FROM mysql.user WHERE User = ""'
+  register: mysql_anonymous_hosts
+  changed_when: false
+  check_mode: no
+
+- name: Remove anonymous MySQL users.
+  mysql_user:
+     name: ""
+     host: "{{ item }}"
+     state: absent
+  with_items: "{{ mysql_anonymous_hosts.stdout_lines|default([]) }}"
+
+- name: Remove MySQL test database.
+  mysql_db: "name='test' state=absent"

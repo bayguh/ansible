@@ -53,6 +53,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   │   ├── ladder.yml
 │   │   ├── mail.yml
 │   │   ├── memcache.yml
+│   │   ├── mysql.yml
 │   │   ├── redis.yml
 │   │   ├── dev
 │   │   │   └── dev.yml
@@ -63,6 +64,14 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   │   └── stg
 │   │       └── stg.yml
 │   ├── host_vars
+│   │   ├── db0001.yml
+│   │   ├── db0002.yml
+│   │   ├── db0003.yml
+│   │   ├── dev-db0001.yml
+│   │   ├── dev-db0002.yml
+│   │   ├── stg-db0001.yml
+│   │   ├── stg-db0002.yml
+│   │   └── stg-db0003.yml
 │   ├── prd.ini
 │   ├── shd.ini
 │   └── stg.ini
@@ -80,6 +89,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   ├── ladder.yml
 │   ├── mail.yml
 │   ├── memcache.yml
+│   ├── mysql.yml
 │   ├── redis.yml
 │   └── common
 │       ├── post_task.yml
@@ -87,19 +97,22 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │       └── reboot_task.yml
 ├── requirements.yml
 ├── roles
-│   ├── galaxy
-│   │   ├── anyenv
-│   │   ├── mackerel
-│   │   ├── ntp
-│   │   ├── package
-│   │   ├── packer
-│   │   ├── selinux
-│   │   └── users_and_groups
 │   ├── consul
 │   ├── gcloud
 │   ├── limits
 │   ├── memcached
+│   ├── mysql
+│   ├── mysql_version_check
 │   ├── pip
-│   └── redis
+│   ├── redis
+│   └── galaxy
+│       ├── anyenv
+│       ├── logrotate
+│       ├── mackerel
+│       ├── ntp
+│       ├── package
+│       ├── packer
+│       ├── selinux
+│       └── users_and_groups
 └── site.yml
 ```

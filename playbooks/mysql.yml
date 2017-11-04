@@ -1,0 +1,68 @@
+---
+
+- name: Mysql Server Tasks
+  hosts: mysql
+  become: true
+  tags: mysql
+  pre_tasks:
+    - name: Install the MySQL repo.
+      yum:
+        name: "{{ install_mysql_repo_rpm }}"
+        state: present
+      when: ansible_os_family == "RedHat"
+      tags: mysql
+
+  roles:
+    # mysql
+    - { role: ../roles/mysql_version_check, mysql_version: "{{ install_mysql_version }}", mysql_packages_not_version: "{{ install_mysql_packages_not_version }}", tags: mysql }
+
+    - role: ../roles/mysql
+      tags: mysql
+      mysql_major_version: "{{ install_mysql_major_version }}"
+      mysql_enablerepo: "{{ install_mysql_enablerepo }}"
+      mysql_packages: "{{ install_mysql_packages }}"
+      mysql_datadir: "/var/lib/mysql{{ install_mysql_major_version }}"
+      mysql_root_home: "/root/mysql{{ install_mysql_major_version }}"
+      mysql_log_dir: /var/log/mysql
+
+      # ユーザ
+      mysql_users: "{{ install_mysql_users }}"
+      mysql_root_password: "{{ mysql_root_user_password }}"
+      mysql_replication_user:
+        name: replication_user
+        host: "{{ mysql_replication_user_host | default('') }}"
+        password: "{{ mysql_replication_user_password }}"
+        priv: "*.*:REPLICATION SLAVE"
+
+      # my.cnf
+      mysql_log_error: "{{ mysql_log_dir }}/mysql-err.log"
+      mysql_slow_query_log_file: "{{ mysql_log_dir }}/mysql-slow.log"
+      mysql_innodb_buffer_pool_size: "{{ install_mysql_innodb_buffer_pool_size }}"
+
+      # replication
+      mysql_server_id: "{{ replication_server_id | default(false) }}"
+      mysql_replication_role: "{{ replication_role | default(false) }}"
+      mysql_replication_master: "{{ replication_master_host | default('') }}"
+
+    # logrotate
+    - role: ../roles/galaxy/logrotate
+      tags: logrotate
+      logrotate_scripts:
+        - name: mysql
+          path: "/var/log/mysql/*.log"
+          options:
+            - daily
+            - missingok
+            - rotate 7
+            - compress
+            - delaycompress
+            - notifempty
+            - create 644 mysql sum_dep
+            - sharedscripts
+          scripts:
+            postrotate: |
+              if test -x /usr/bin/mysqladmin && \
+                    /usr/bin/mysqladmin ping &>/dev/null
+                  then
+                    /usr/bin/mysqladmin flush-logs
+                  fi

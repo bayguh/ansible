@@ -1,0 +1,73 @@
+# mysql rpm
+install_mysql_repo_rpm: "https://dev.mysql.com/get/mysql57-community-release-el6-11.noarch.rpm"
+# mysqlリポジトリ
+install_mysql_enablerepo: "mysql57-community"
+# mysqlメジャーバージョン
+install_mysql_major_version: "5.7"
+# mysqlバージョン
+install_mysql_version: "{{ install_mysql_major_version }}.20"
+# mysqlパッケージ(依存関係があるので順番を変更しないようにして下さい)
+install_mysql_packages:
+  - mysql-community-server-{{ install_mysql_version }}
+  - mysql-community-common-{{ install_mysql_version }}
+  - mysql-community-client-{{ install_mysql_version }}
+  - mysql-community-devel-{{ install_mysql_version }}
+  - mysql-community-libs-{{ install_mysql_version }}
+  - mysql-community-libs-compat-{{ install_mysql_version }}
+  - mysql-community-embedded-{{ install_mysql_version }}
+  - mysql-community-embedded-devel-{{ install_mysql_version }}
+  - postfix
+# (依存関係があるので順番を変更しないようにして下さい)
+install_mysql_packages_not_version:
+  - postfix
+  - mysql-community-server
+  - mysql-community-client
+  - mysql-community-embedded-devel
+  - mysql-community-embedded
+  - mysql-community-devel
+  - mysql-community-libs-compat
+  - mysql-community-libs
+  - mysql-community-common
+
+# mysqlユーザ
+mysql_root_user_password: "root"
+mysql_replication_user_password: "replication_user"
+mysql_replication_user_host: "10.0.%"
+install_mysql_users:
+  - name: deploy_user
+    host: "10.0.%"
+    password: "deploy_user"
+    priv: "*.*:INSERT,UPDATE,DELETE,CREATE,DROP,SELECT,ALTER,INDEX,SHOW VIEW,LOCK TABLES"
+  - name: update_user
+    host: "10.0.%"
+    password: "update_user"
+    priv: "*.*:INSERT,UPDATE,DELETE,SELECT"
+  - name: select_user
+    host: "10.0.%"
+    password: "select_user"
+    priv: "*.*:SELECT"
+  - name: mha_user
+    host: "10.0.%"
+    password: "mha_user"
+    priv: "*.*:INSERT,UPDATE,DELETE,CREATE,SELECT,SUPER,REPLICATION CLIENT,RELOAD"
+  - name: mackerel_user
+    host: "127.0.0.1"
+    password: "mackerel_user"
+    priv: "*.*:SELECT,PROCESS,REPLICATION CLIENT"
+
+# innodb buffer サイズ
+install_mysql_innodb_buffer_pool_size: "1G"
+
+# mackerel設定
+install_mackerel_agent_plugins:
+  mackerel-plugin-inode: "/usr/local/bin/mackerel-plugin-inode"
+  mackerel-plugin-linux: "/usr/local/bin/mackerel-plugin-linux"
+  mackerel-plugin-mailq: "/usr/local/bin/mackerel-plugin-mailq -M postfix"
+  mackerel-plugin-mysql: "/usr/local/bin/mackerel-plugin-mysql -host=127.0.0.1 -username=mackerel_user -password='mackerel_user'"
+
+install_mackerel_check_plugins:
+  check-ntpoffset: "/usr/local/bin/check-ntpoffset -w=500"
+
+  check-procs-mysqld: "/usr/local/bin/check-procs --pattern /usr/sbin/mysqld"
+
+  check-tcp-3306: "/usr/local/bin/check-tcp -p 3306"

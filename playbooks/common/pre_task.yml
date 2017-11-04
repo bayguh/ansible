@@ -57,6 +57,8 @@
       consul_disable_remote_exec: "{{ install_consul_disable_remote_exec }}"
       consul_node_type: "{{ install_consul_node_type }}"
       consul_nodes: "{{ install_consul_nodes }}"
+      consul_service_name: "{{ install_consul_service_name }}"
+      consul_service_tags: "{{ install_consul_service_tags }}"
       tags: consul
 
     # google sdkのインストール

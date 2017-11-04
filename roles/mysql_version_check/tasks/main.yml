@@ -1,0 +1,32 @@
+---
+# tasks file for mysql_version_check
+
+- name: check version
+  shell: mysql --version
+  register: check_version
+  failed_when: check_version.rc not in [0, 1, 127]
+  changed_when: "mysql_version not in check_version.stdout"
+  tags: mysql
+
+- name: delete mysql package
+  package:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - MySQL-python
+    - "{{ mysql_packages_not_version }}"
+  when: check_version.changed
+  tags: mysql
+
+- name: unnecessary delete mysql package
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - cronie
+    - cronie-anacron
+    - crontabs
+    - sysstat
+    - yum-cron
+  when: check_version.changed
+  tags: mysql

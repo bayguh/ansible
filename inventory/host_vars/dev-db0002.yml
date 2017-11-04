@@ -1,0 +1,13 @@
+# replication設定
+replication_server_id: "1002"
+replication_role: "slave"
+replication_master_host: "dev-db0001"
+
+# mackerel設定
+install_mackerel_check_plugins:
+  check-ntpoffset: "/usr/local/bin/check-ntpoffset -w=500"
+  check-mysql-replication: "/usr/local/bin/check-mysql replication --host=127.0.0.1 --user=mackerel_user --password='mackerel_user' --warning=60"
+
+  check-procs-mysqld: "/usr/local/bin/check-procs --pattern /usr/sbin/mysqld"
+
+  check-tcp-3306: "/usr/local/bin/check-tcp -p 3306"

@@ -1,0 +1,20 @@
+---
+
+- name: Set Password Policy
+  shell: >
+    mysql -u root -p'{{ mysql_root_password }}' -e
+    'SET GLOBAL validate_password_length=4;
+    SET GLOBAL validate_password_policy=LOW;'
+  changed_when: false
+
+- name: Ensure MySQL users are present.
+  mysql_user:
+    name: "{{ item.name }}"
+    host: "{{ item.host | default('localhost') }}"
+    password: "{{ item.password }}"
+    priv: "{{ item.priv | default('*.*:USAGE') }}"
+    state: "{{ item.state | default('present') }}"
+    append_privs: "{{ item.append_privs | default('no') }}"
+    encrypted: "{{ item.encrypted | default('no') }}"
+  with_items: "{{ mysql_users }}"
+  no_log: true

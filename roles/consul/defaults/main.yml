@@ -24,6 +24,9 @@ consul_leave_on_terminate: true
 consul_bootstrap_expect: "{{ consul_nodes|length }}"
 consul_performance_raft_multiplier: 1
 
+consul_service_name: ""
+consul_service_tags: []
+
 consul_node_type: server
 consul_pip_pkgs:
   - python-consul

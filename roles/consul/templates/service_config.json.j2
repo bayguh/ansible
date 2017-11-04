@@ -1,0 +1,12 @@
+{
+  "service": {
+    "name": "{{ consul_service_name }}",
+    "tags": [ "{{ consul_service_tags|join('", "') }}" ],
+    "address": "{{ consul_service_checks|default("") }}",
+{% if consul_service_port is defined %}
+    "port": {{ consul_service_port }},
+{% endif %}
+    "enableTagOverride": false,
+    "checks": {{ consul_service_checks|default([]) }}
+  }
+}

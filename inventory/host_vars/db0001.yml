@@ -1,0 +1,4 @@
+# replication設定
+replication_server_id: "1001"
+replication_role: "master"
+replication_master_host: "{{ inventory_hostname }}"

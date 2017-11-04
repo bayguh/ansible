@@ -5,7 +5,7 @@ install_mysql_repo_rpm: "https://dev.mysql.com/get/mysql57-community-release-el6
 install_mysql_major_version: "5.7"
 
 # mysqlバージョン
-install_mysql_version: "{{ install_mysql_major_version }}.18"
+install_mysql_version: "{{ install_mysql_major_version }}.20"
 
 # mysqlパッケージ
 install_mysql_package: "mysql-community-client-{{ install_mysql_version }}"
