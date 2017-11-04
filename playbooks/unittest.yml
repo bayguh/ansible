@@ -1,0 +1,90 @@
+---
+
+- name: Unittest Server Tasks
+  hosts: unittest
+  become: true
+  tags: unittest
+  pre_tasks:
+    - name: Install the MySQL repo.
+      yum:
+        name: "{{ unittest_install_mysql_repo_rpm }}"
+        state: present
+      when: ansible_os_family == "RedHat"
+      tags: mysql
+
+  roles:
+    # mysql
+    - { role: ../roles/mysql_version_check, mysql_version: "{{ unittest_install_mysql_version }}", mysql_packages_not_version: "{{ unittest_install_mysql_packages_not_version }}", tags: mysql }
+    - role: ../roles/mysql
+      tags: mysql
+      mysql_major_version: "{{ unittest_install_mysql_major_version }}"
+      mysql_enablerepo: "{{ unittest_install_mysql_enablerepo }}"
+      mysql_packages: "{{ unittest_install_mysql_packages }}"
+      mysql_datadir: "/var/lib/mysql{{ unittest_install_mysql_major_version }}"
+      mysql_root_home: "/root/mysql{{ unittest_install_mysql_major_version }}"
+      mysql_log_dir: /var/log/mysql
+
+      # ユーザ
+      mysql_users: "{{ unittest_install_mysql_users }}"
+      mysql_root_password: "{{ unittest_mysql_root_user_password }}"
+
+      # my.cnf
+      mysql_log_error: "{{ mysql_log_dir }}/mysql-err.log"
+      mysql_slow_query_log_file: "{{ mysql_log_dir }}/mysql-slow.log"
+      mysql_innodb_buffer_pool_size: "{{ unittest_install_mysql_innodb_buffer_pool_size }}"
+
+    # memcachedユーザ作成
+    - role: ../roles/galaxy/users_and_groups
+      tags: memcache
+      users_and_groups:
+        groups:
+          - name: "memcached"
+        users:
+          - name: "memcached"
+            group: "memcached"
+        sudoers: []
+        whitelist_groups: []
+        authorized_keys_dir: ~
+    - role: ../roles/memcached
+      memcached_version: "{{ unittest_install_memcached_version }}"
+      memcached_checksum: "{{ unittest_install_memcached_checksum }}"
+      memcached_user: memcached
+      memcached_memory_limit: "{{ unittest_install_memcached_memory_limit }}"
+      memcached_connections: 32767
+      tags: memcache
+
+    # redis
+    - role: ../roles/redis
+      redis_version: "{{ unittest_install_redis_version }}"
+      redis_bind: 0.0.0.0
+      redis_protected_mode: "no"
+      redis_port: "{{ unittest_install_redis_port }}"
+      redis_timeout: "{{ unittest_install_redis_timeout }}"
+      redis_tcp_keepalive: 60
+      redis_daemonize: "yes"
+      redis_logfile: '""'
+      redis_save: ["\"\""]
+      redis_maxmemory: "{{ unittest_install_redis_maxmemory }}"
+      redis_maxmemory_policy: "volatile-lru"
+      redis_slaveof: "{{ setting_redis_slaveof | default(false) }}"
+      redis_cluster_enabled: "no"
+      tags: redis
+
+    # php
+    - { role: ../roles/php_version_check, php_version: "{{ unittest_install_php_version }}", php_packages_not_version: "{{ unittest_install_php_packages_not_version }}", tags: php }
+    - role: ../roles/galaxy/php
+      tags: php
+      php_enablerepo: "{{ unittest_install_php_enablerepo }}"
+      php_packages: "{{ unittest_install_php_packages }}"
+      php_expose_php: "Off"
+      php_date_timezone: "Asia/Tokyo"
+      php_apc_enable_cli: "1"
+      php_enable_webserver: false
+
+    - { role: ../roles/composer_version_check, composer_version: "{{ unittest_install_composer_version }}", tags: composer }
+    - { role: ../roles/galaxy/composer, composer_version: "{{ unittest_install_composer_version }}", tags: composer }
+
+  tasks:
+    - name: Update /var/www Directory
+      file: path=/var/www state=directory owner="{{ public_execute_user }}" group="{{ public_execute_user }}" mode=0755
+      tags: directory

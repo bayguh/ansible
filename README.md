@@ -55,6 +55,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   │   ├── memcache.yml
 │   │   ├── mysql.yml
 │   │   ├── redis.yml
+│   │   ├── unittest.yml
 │   │   ├── web.yml
 │   │   ├── dev
 │   │   │   └── dev.yml
@@ -92,6 +93,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   ├── memcache.yml
 │   ├── mysql.yml
 │   ├── redis.yml
+│   ├── unittest.yml
 │   ├── web.yml
 │   └── common
 │       ├── post_task.yml
