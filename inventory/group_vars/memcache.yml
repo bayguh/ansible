@@ -1,0 +1,22 @@
+# memcacheバージョン
+install_memcached_version: "1.5.2"
+# chksum sha256 https://fossies.org/linux/www/
+install_memcached_checksum: 9ac93113bdb5d037e79c61277386564ac2e5e31d49e594f11e554e4c149b7245
+# memcache memory limit
+install_memcached_memory_limit: 1024
+
+# mackerel設定
+install_mackerel_agent_plugins:
+  mackerel-plugin-inode: "/usr/local/bin/mackerel-plugin-inode"
+  mackerel-plugin-linux: "/usr/local/bin/mackerel-plugin-linux"
+  mackerel-plugin-mailq: "/usr/local/bin/mackerel-plugin-mailq -M postfix"
+
+  mackerel-plugin-memcached: "/usr/local/bin/mackerel-plugin-memcached"
+
+install_mackerel_check_plugins:
+  check-ntpoffset: "/usr/local/bin/check-ntpoffset -w=500"
+  check-memcached: "/usr/local/bin/check-memcached -k CheckKey"
+
+  check-procs-memcache: "/usr/local/bin/check-procs --pattern memcached"
+
+  check-tcp-11211: "/usr/local/bin/check-tcp -p 11211"

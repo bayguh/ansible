@@ -1,0 +1,11 @@
+---
+memcached_version: "1.4.39"
+memcached_checksum: 23c4bf7c787e4fd9a7b0a7b61b3ffcb374ee86f9cc00ba892ce53eec40afd735
+memcached_port: 11211
+memcached_listen_ip: 127.0.0.1
+
+memcached_memory_limit: 64
+memcached_connections: 1024
+
+memcached_log_file: /var/log/memcached.log
+memcached_log_verbosity: ""

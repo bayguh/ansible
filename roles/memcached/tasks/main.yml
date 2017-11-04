@@ -1,0 +1,85 @@
+---
+# Include variables and define needed variables.
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Define memcached_user.
+  set_fact:
+    memcached_user: "{{ __memcached_user }}"
+  when: memcached_user is not defined
+
+
+# ソースからインストール ==============================
+
+- name: Install libevent
+  package: name=libevent state=installed
+
+- name: Install libevent-devel
+  package: name=libevent-devel state=installed
+
+- name: Install gcc
+  package: name=gcc state=installed
+
+- name: check version
+  shell: memcached -h | head -n1
+  register: check_version
+  failed_when: check_version.rc not in [0, 1]
+  changed_when: "memcached_version not in check_version.stdout"
+
+- name: Download Memcached.
+  get_url:
+    url: "http://www.memcached.org/files/memcached-{{ memcached_version }}.tar.gz"
+    checksum: sha256:"{{ memcached_checksum }}"
+    dest: /tmp/memcached-{{ memcached_version }}.tar.gz
+    force: True
+  register: memcached_install
+  tags: download_memcache
+
+- name: Unarchive source
+  command: chdir=/tmp tar zxvf /tmp/memcached-{{ memcached_version }}.tar.gz -C /usr/local/src
+  when: memcached_install.changed
+
+- name: Comfigure memcached
+  command: chdir=/usr/local/src/memcached-{{ memcached_version }} ./configure
+  when: memcached_install.changed
+
+- name: Make memcached
+  command: chdir=/usr/local/src/memcached-{{ memcached_version }} make
+  when: memcached_install.changed
+
+- name: Install memcached
+  command: chdir=/usr/local/src/memcached-{{ memcached_version }} make install
+  when: memcached_install.changed or check_version.changed
+
+- name: Make directory memcached
+  file:
+    path: /var/run/memcached
+    state: directory
+    owner: "{{ memcached_user }}"
+    group: "{{ memcached_user }}"
+    mode: 0755
+  when: memcached_install.changed
+  register: make_memcached_dirctory
+
+- name: Copy init script
+  command: sudo cp /usr/local/src/memcached-{{ memcached_version }}/scripts/memcached.sysv /etc/rc.d/init.d/memcached
+  when: memcached_install.changed
+
+- name: Smlink memcached
+  command: sudo ln -s -f /usr/local/bin/memcached /usr/bin/memcached
+  when: memcached_install.changed
+
+# ==============================
+
+# Configure Memcached.
+- name: Copy Memcached configuration.
+  template:
+    src: memcached-{{ ansible_os_family }}.conf.j2
+    dest: "{{ memcached_config_file }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart memcached
+
+- name: Ensure Memcached is started and set to run on startup.
+  service: name=memcached state=started enabled=yes

@@ -1,0 +1,29 @@
+---
+
+- name: Memcache Server Tasks
+  hosts: memcache
+  become: true
+  tags: memcache
+  roles:
+    # memcachedユーザ作成
+    - role: ../roles/galaxy/users_and_groups
+      users_and_groups:
+        groups:
+          - name: "memcached"
+        users:
+          - name: "memcached"
+            group: "memcached"
+        sudoers: []
+        whitelist_groups: []
+        authorized_keys_dir: ~
+        tags: user
+
+    # memcacheインストール
+    - role: ../roles/memcached
+      memcached_version: "{{ install_memcached_version }}"
+      memcached_checksum: "{{ install_memcached_checksum }}"
+      memcached_user: memcached
+      memcached_memory_limit: "{{ install_memcached_memory_limit }}"
+      memcached_connections: 32767
+      memcached_listen_ip: 0.0.0.0
+      tags: memcache
