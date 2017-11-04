@@ -1,0 +1,17 @@
+---
+# tasks file for php_version_check
+
+- name: check version
+  shell: php -v | head -n1
+  register: check_version
+  failed_when: check_version.rc not in [0, 1]
+  changed_when: "php_version not in check_version.stdout"
+  tags: php
+
+- name: delete php package
+  package:
+    name: "{{ item }}"
+    state: absent
+  with_items: "{{ php_packages_not_version }}"
+  when: check_version.changed
+  tags: php

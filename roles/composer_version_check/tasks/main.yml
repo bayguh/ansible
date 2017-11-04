@@ -1,0 +1,16 @@
+---
+# tasks file for composer_version_check
+
+- name: check version
+  shell: "{{ composer_path }} --version"
+  register: check_version
+  failed_when: check_version.rc not in [0, 1, 127]
+  changed_when: "composer_version not in check_version.stdout"
+  tags: composer
+
+- name: delete composer package
+  file:
+    path: "{{ composer_path }}"
+    state: absent
+  when: check_version.changed
+  tags: composer

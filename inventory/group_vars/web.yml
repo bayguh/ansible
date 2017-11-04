@@ -1,0 +1,132 @@
+# nginx===================================
+# nginxバージョン
+install_nginx_package_name: "nginx-1.12.2"
+
+# サーバ名
+setting_server_name: web.bayguh.jp
+
+# conf.d/*.conf
+install_nginx_vhosts:
+  - listen: 80
+    server_name: "{{ setting_server_name }}"
+    extra_parameters: |
+      location ~ \.php$ {
+          root   /var/www/app/current;
+          fastcgi_pass 127.0.0.1:9000;
+          fastcgi_index index.php;
+          fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+          include fastcgi_params;
+      }
+
+      location / {
+          root   /var/www/app/current;
+          index  index.php;
+
+          if (!-e \$request_filename) {
+              rewrite ^(.+)$ /index.php?\$1 last;
+          }
+      }
+
+      error_page   500 502 503 504  /50x.html;
+      location = /50x.html {
+          root   /usr/share/nginx/html;
+      }
+
+  - listen: 80
+    filename: "status.conf"
+    server_name: "127.0.0.1"
+    extra_parameters: |
+      # nginx status
+      location /nginx_status {
+          stub_status on;
+          access_log off;
+          allow 127.0.0.1;
+          deny all;
+      }
+
+      # php-fpm status
+      location /php_fpm_status {
+          include /etc/nginx/fastcgi_params;
+          fastcgi_param SCRIPT_FILENAME /php_fpm_status;
+          fastcgi_pass 127.0.0.1:9000;
+          access_log off;
+          allow 127.0.0.1;
+          deny all;
+      }
+
+#=========================================
+
+# php=====================================
+# phpバージョン
+install_php_version: "7.1.11"
+
+# インストールに必要なリポジトリ
+install_php_enablerepo: "remi-php71,remi"
+# phpインストールパッケージ
+install_php_packages:
+  - php-{{ install_php_version }}
+  - php-cli-{{ install_php_version }}
+  - php-common-{{ install_php_version }}
+  - php-fpm-{{ install_php_version }}
+  - php-mbstring-{{ install_php_version }}
+  - php-opcache-{{ install_php_version }}
+  - php-pdo-{{ install_php_version }}
+  - php-xml-{{ install_php_version }}
+  - php-xmlrpc-{{ install_php_version }}
+  - php-mcrypt-{{ install_php_version }}
+  - php-process-{{ install_php_version }}
+  - php-mysqlnd-{{ install_php_version }}
+  - php-bcmath-{{ install_php_version }}
+  - php-intl-{{ install_php_version }}
+  - php-pecl-apcu
+  - php-pecl-memcached
+  - php-pecl-redis
+  - php-pecl-msgpack
+  - php-pecl-zip
+  - php-pear
+  - php-timecop
+# phpインストールパッケージ
+install_php_packages_not_version:
+  - php
+  - php-cli
+  - php-common
+  - php-fpm
+  - php-mbstring
+  - php-opcache
+  - php-pdo
+  - php-xml
+  - php-xmlrpc
+  - php-mcrypt
+  - php-process
+  - php-mysqlnd
+  - php-bcmath
+  - php-intl
+  - php-pecl-apcu
+  - php-pecl-memcached
+  - php-pecl-redis
+  - php-pecl-msgpack
+  - php-pecl-zip
+  - php-pear
+  - php-timecop
+
+# composerバージョン
+install_composer_version: "1.5.2"
+
+#=========================================
+
+# mackerel設定
+install_mackerel_agent_plugins:
+  mackerel-plugin-inode: "/usr/local/bin/mackerel-plugin-inode"
+  mackerel-plugin-linux: "/usr/local/bin/mackerel-plugin-linux"
+  mackerel-plugin-mailq: "/usr/local/bin/mackerel-plugin-mailq -M postfix"
+
+  mackerel-plugin-nginx: "/usr/local/bin/mackerel-plugin-nginx -uri=http://127.0.0.1/nginx_status"
+  mackerel-plugin-php-fpm: "/usr/bin/mackerel-plugin-php-fpm -url=http://127.0.0.1/php_fpm_status?json"
+
+install_mackerel_check_plugins:
+  check-ntpoffset: "/usr/local/bin/check-ntpoffset -w=500"
+
+  check-procs-nginx: "/usr/local/bin/check-procs --pattern /usr/sbin/nginx"
+  check-procs-php-fpm: "/usr/local/bin/check-procs --pattern php-fpm -u root"
+
+  check-tcp-80: "/usr/local/bin/check-tcp -p 80"

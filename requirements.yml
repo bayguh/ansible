@@ -13,6 +13,16 @@
   name: users_and_groups
   version: v1.4.1
 
+# https://galaxy.ansible.com/geerlingguy/repo-remi/
+- src: geerlingguy.repo-remi
+  name: remi
+  version: 1.2.0
+
+# https://galaxy.ansible.com/geerlingguy/repo-epel/
+- src: geerlingguy.repo-epel
+  name: epel
+  version: 1.2.2
+
 # https://galaxy.ansible.com/GROG/package/
 - src: GROG.package
   name: package
@@ -37,6 +47,21 @@
 - src: nickhammond.logrotate
   name: logrotate
   version: master
+
+# https://galaxy.ansible.com/geerlingguy/nginx/
+- src: geerlingguy.nginx
+  name: nginx
+  version: 2.5.0
+
+# https://galaxy.ansible.com/geerlingguy/php/
+- src: geerlingguy.php
+  name: php
+  version: 3.5.0
+
+# https://galaxy.ansible.com/geerlingguy/composer/
+- src: geerlingguy.composer
+  name: composer
+  version: 1.6.1
 
 # https://galaxy.ansible.com/mackerelio/mackerel-agent/
 - src: mackerelio.mackerel-agent
@@ -92,4 +117,3 @@
 #   version: master
 
 # ==========================================================================
-

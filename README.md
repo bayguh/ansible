@@ -55,6 +55,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   │   ├── memcache.yml
 │   │   ├── mysql.yml
 │   │   ├── redis.yml
+│   │   ├── web.yml
 │   │   ├── dev
 │   │   │   └── dev.yml
 │   │   ├── prd
@@ -91,27 +92,38 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   ├── memcache.yml
 │   ├── mysql.yml
 │   ├── redis.yml
+│   ├── web.yml
 │   └── common
 │       ├── post_task.yml
 │       ├── pre_task.yml
 │       └── reboot_task.yml
 ├── requirements.yml
 ├── roles
+│   ├── extends_nginx.conf.j2
+│   ├── composer_version_check
 │   ├── consul
 │   ├── gcloud
 │   ├── limits
 │   ├── memcached
 │   ├── mysql
 │   ├── mysql_version_check
+│   ├── php_version_check
+│   ├── php-fpm_status
 │   ├── pip
 │   ├── redis
 │   └── galaxy
 │       ├── anyenv
+│       ├── composer
+│       ├── epel
 │       ├── logrotate
 │       ├── mackerel
+│       ├── nginx
 │       ├── ntp
 │       ├── package
 │       ├── packer
+│       ├── php
+│       ├── postfix
+│       ├── remi
 │       ├── selinux
 │       └── users_and_groups
 └── site.yml

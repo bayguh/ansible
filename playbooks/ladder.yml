@@ -23,10 +23,10 @@
           - name: "operation_group"
         users: []
         sudoers:
-          - name: operation_user
+          - name: "{{ public_execute_user }}"
             user: "%operation_group"
             runas: "ALL=(ALL)"
-            commands: "NOPASSWD: /bin/su - operation_user"
+            commands: "NOPASSWD: /bin/su - {{ public_execute_user }}"
         whitelist_groups: []
         authorized_keys_dir: ~
       tags: sudoers
@@ -34,9 +34,9 @@
   tasks:
     - name: Upload id_rsa
       copy:
-        src: ../keys/ssh/operation_user/id_rsa
-        dest: "/home/operation_user/.ssh/id_rsa"
-        owner: "operation_user"
-        group: "operation_user"
+        src: ../keys/ssh/{{ public_execute_user }}/id_rsa
+        dest: "/home/{{ public_execute_user }}/.ssh/id_rsa"
+        owner: "{{ public_execute_user }}"
+        group: "{{ public_execute_user }}"
         mode: 0600
       tags: ssh_key

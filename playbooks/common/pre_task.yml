@@ -22,15 +22,19 @@
     - role: ../../roles/galaxy/users_and_groups
       users_and_groups:
         groups:
-          - name: operation_user
+          - name: "{{ public_execute_user }}"
         users:
-          - name: operation_user
-            group: operation_user
-            ssh_key: ../../keys/ssh/operation_user/id_rsa.pub
+          - name: "{{ public_execute_user }}"
+            group: "{{ public_execute_user }}"
+            ssh_key: ../../keys/ssh/{{ public_execute_user }}/id_rsa.pub
         sudoers: []
         whitelist_groups: []
         authorized_keys_dir: ~
       tags: users_and_groups
+
+    # リポジトリ登録
+    - { role: ../../roles/galaxy/remi, tags: repository }
+    - { role: ../../roles/galaxy/epel, tags: repository }
 
     # 共通パッケージのインストール
     - { role: ../../roles/galaxy/package, package_list: "{{ install_common_package_list }}", package_list_group: "{{ install_common_package_list_group }}", tags: package }

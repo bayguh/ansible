@@ -1,0 +1,92 @@
+---
+
+- name: Web Server Tasks
+  hosts: web
+  become: true
+  tags: web
+  roles:
+    - role: ../roles/galaxy/nginx
+      tags: nginx
+      nginx_package_name: "{{ install_nginx_package_name }}"
+      nginx_conf_template: ../../../extends_nginx.conf.j2
+
+      # nginx.conf
+      nginx_keepalive_timeout: "650"
+      nginx_log_format: |
+        'time:$time_iso8601\t'
+        'method:$request_method\t'
+        'status:$status\t'
+        'remote_host:$remote_addr\t'
+        'forwardedfor:$http_x_forwarded_for\t'
+        'reqsize:$request_length\t'
+        'total_size:$bytes_sent\t'
+        'size:$body_bytes_sent\t'
+        'reqtime:$request_time\t'
+        'apptime:$upstream_response_time\t'
+        'reqhost:$http_host\t'
+        'uri:$request_uri\t'
+        'query:$query_string\t'
+        'referer:$http_referer\t'
+        'ua:$http_user_agent\t'
+        'hostname:$hostname\t'
+
+      # conf.d/*.conf
+      nginx_vhosts: "{{ install_nginx_vhosts }}"
+
+    # php
+    - { role: ../roles/php_version_check, php_version: "{{ install_php_version }}", php_packages_not_version: "{{ install_php_packages_not_version }}", tags: php }
+    - role: ../roles/galaxy/php
+      tags: php
+      php_enablerepo: "{{ install_php_enablerepo }}"
+      php_packages: "{{ install_php_packages }}"
+      php_expose_php: "Off"
+      php_date_timezone: "Asia/Tokyo"
+      php_webserver_daemon: "nginx"
+      php_apc_enable_cli: "1"
+      php_enable_php_fpm: true
+      php_fpm_listen: 127.0.0.1:9000
+      php_fpm_pool_user: "nginx"
+      php_fpm_pool_group: "nginx"
+      php_fpm_pm_start_servers: 5
+      php_fpm_pm_min_spare_servers: 5
+      php_fpm_pm_max_spare_servers: 35
+
+    - { role: ../roles/php-fpm_status, php_fpm_pm_status_path: "/php_fpm_status", tags: php }
+    - { role: ../roles/composer_version_check, composer_version: "{{ install_composer_version }}", tags: composer }
+    - { role: ../roles/galaxy/composer, composer_version: "{{ install_composer_version }}", tags: composer }
+
+    # logrotate
+    - role: ../roles/galaxy/logrotate
+      tags: logrotate
+      logrotate_scripts:
+        - name: nginx
+          path: /var/log/nginx/*.log
+          options:
+            - daily
+            - missingok
+            - rotate 7
+            - compress
+            - delaycompress
+            - notifempty
+            - create 644 nginx sum_dep
+            - sharedscripts
+          scripts:
+            postrotate: "[ -s /var/run/nginx.pid ] && kill -USR1 `cat /var/run/nginx.pid`"
+        - name: php-fpm
+          path: /var/log/php-fpm/*.log
+          options:
+            - daily
+            - missingok
+            - rotate 7
+            - compress
+            - delaycompress
+            - notifempty
+            - create 644 nginx sum_dep
+            - sharedscripts
+          scripts:
+            postrotate: "[ -s /var/run/php-fpm/php-fpm.pid ] && kill -USR1 `cat /var/run/php-fpm/php-fpm.pid`"
+
+  tasks:
+    - name: Update /var/www Directory
+      file: path=/var/www state=directory owner="{{ public_execute_user }}" group="{{ public_execute_user }}" mode=0755
+      tags: directory
