@@ -53,6 +53,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   │   ├── ladder.yml
 │   │   ├── mail.yml
 │   │   ├── memcache.yml
+│   │   ├── redis.yml
 │   │   ├── dev
 │   │   │   └── dev.yml
 │   │   ├── prd
@@ -79,6 +80,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   ├── ladder.yml
 │   ├── mail.yml
 │   ├── memcache.yml
+│   ├── redis.yml
 │   └── common
 │       ├── post_task.yml
 │       ├── pre_task.yml
@@ -97,6 +99,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   ├── gcloud
 │   ├── limits
 │   ├── memcached
-│   └── pip
+│   ├── pip
+│   └── redis
 └── site.yml
 ```

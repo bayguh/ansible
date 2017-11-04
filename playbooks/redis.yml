@@ -1,0 +1,23 @@
+---
+
+- name: Redis Server Tasks
+  hosts: redis
+  become: true
+  tags: redis
+  roles:
+    # redis インストール
+    - role: ../roles/redis
+      redis_version: "{{ install_redis_version }}"
+      redis_bind: 0.0.0.0
+      redis_protected_mode: "no"
+      redis_port: "{{ install_redis_port }}"
+      redis_timeout: "{{ install_redis_timeout }}"
+      redis_tcp_keepalive: 60
+      redis_daemonize: "yes"
+      redis_logfile: '""'
+      redis_save: ["\"\""]
+      redis_maxmemory: "{{ install_redis_maxmemory }}"
+      redis_maxmemory_policy: "volatile-lru"
+      redis_slaveof: "{{ setting_redis_slaveof | default(false) }}"
+      redis_cluster_enabled: "no"
+      tags: redis

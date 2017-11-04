@@ -1,0 +1,30 @@
+# redisバージョン
+install_redis_version: 3.2.11
+
+# redis port
+#
+# 下記バグのため一時直指定対応 - 手動修正
+# https://github.com/DavidWittman/ansible-redis/issues/150
+install_redis_port: 6379
+
+# redis タイムアウト
+install_redis_timeout: 120
+
+# redis max memory
+install_redis_maxmemory: "1gb"
+
+# mackerel設定
+install_mackerel_agent_plugins:
+  mackerel-plugin-inode: "/usr/local/bin/mackerel-plugin-inode"
+  mackerel-plugin-linux: "/usr/local/bin/mackerel-plugin-linux"
+  mackerel-plugin-mailq: "/usr/local/bin/mackerel-plugin-mailq -M postfix"
+
+  mackerel-plugin-redis: "/usr/local/bin/mackerel-plugin-redis -port=6379"
+
+install_mackerel_check_plugins:
+  check-ntpoffset: "/usr/local/bin/check-ntpoffset -w=500"
+  check-redis_reachable: "/usr/local/bin/check-redis reachable --host=127.0.0.1 --port=6379"
+
+  check-procs-redis: "/usr/local/bin/check-procs --pattern '/opt/redis/bin/redis-server 0.0.0.0:6379'"
+
+  check-tcp-6379: "/usr/local/bin/check-tcp -p 6379"
