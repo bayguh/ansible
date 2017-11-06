@@ -1,0 +1,29 @@
+---
+
+- name: Gitlab Server Tasks
+  hosts: gitlab
+  become: true
+  tags: gitlab
+  roles:
+    - role: ../roles/gitlab
+      gitlab_version: "{{ install_gitlab_version }}"
+      gitlab_fqdn: "{{ install_gitlab_fqdn }}"
+      gitlab_time_zone: "Asia/Tokyo"
+      gitlab_email_from: "{{ gitlab_email }}"
+      gitlab_lfs_enabled: True
+      gitlab_lfs_storage_path: "/var/opt/gitlab/lfs-objects"
+      gitlab_default_can_create_group: false
+      gitlab_username_changing_enabled: false
+      gitlab_omniauth_allow_single_sign_on: True
+      gitlab_omniauth_block_auto_created_users: True
+      gitlab_nginx_ssl_enabled: True
+      gitlab_nginx_ssl_cert_path: "/etc/gitlab/ssl"
+      gitlab_nginx_ssl_key_path: "/etc/gitlab/ssl"
+      gitlab_nginx_ssl_filename: "certificate"
+      gitlab_nginx_ssl_crt: "{{ lookup('file', '../keys/ssl/certificate.pem') + '\n' + lookup('file', '../keys/ssl/chain_certificate.pem') }}"
+      gitlab_nginx_ssl_key: "{{ lookup('file', '../keys/ssl/private.key') }}"
+      gitlab_days_old_backups: "{{ install_gitlab_days_old_backups }}"
+      backup_min: "{{ install_gitlab_backup_min }}"
+      backup_hour: "{{ install_gitlab_backup_hour }}"
+      backup_remove_min: "{{ install_gitlab_backup_remove_min }}"
+      backup_remove_hour: "{{ install_gitlab_backup_remove_hour }}"

@@ -121,6 +121,11 @@
 #   name: redis
 #   version: 1.2.4
 
+# https://galaxy.ansible.com/samdoran/gitlab/
+# - src: samdoran.gitlab
+#   name: gitlab
+#   version: 3.1.2
+
 # ==========================================================================
 
 

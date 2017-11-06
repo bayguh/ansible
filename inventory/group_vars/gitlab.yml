@@ -1,0 +1,34 @@
+# バージョン
+install_gitlab_version: "10.0.5"
+# アクセスurl
+install_gitlab_fqdn: "gitlab.bayguh.jp"
+
+# email
+gitlab_email: "bayguh-gitlab@bayguh.co.jp"
+
+# gitlab上に残しておくバックアップデータの日数(0で当日分)
+install_gitlab_days_old_backups: 10
+
+# バックアップ実行時間(分)
+install_gitlab_backup_min: "0"
+# バックアップ実行時間(時間)
+install_gitlab_backup_hour: "23"
+
+# バックアップローテート実行時間(分)
+install_gitlab_backup_remove_min: "30"
+# バックアップローテート実行時間(時間)
+install_gitlab_backup_remove_hour: "23"
+
+# mackerel設定
+install_mackerel_agent_plugins:
+  mackerel-plugin-inode: "/usr/local/bin/mackerel-plugin-inode"
+  mackerel-plugin-linux: "/usr/local/bin/mackerel-plugin-linux"
+  mackerel-plugin-mailq: "/usr/local/bin/mackerel-plugin-mailq -M postfix"
+
+install_mackerel_check_plugins:
+  check-ntpoffset: "/usr/local/bin/check-ntpoffset -w=500"
+
+  check-procs-gitlab: "/usr/local/bin/check-procs --pattern unicorn.rb"
+  check-procs-postfix: "/usr/local/bin/check-procs --pattern /usr/libexec/postfix/master"
+
+  check-tcp-443: "/usr/local/bin/check-tcp -p 443"

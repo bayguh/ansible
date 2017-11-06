@@ -51,6 +51,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   │   ├── ansible.yml
 │   │   ├── consul.yml
 │   │   ├── deploy.yml
+│   │   ├── gitlab.yml
 │   │   ├── jenkins.yml
 │   │   ├── ladder.yml
 │   │   ├── mail.yml
@@ -90,10 +91,15 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   │       ├── id_rsa
 │   │       └── id_rsa.pub
 │   └── ssl
+│       ├── certificate.crt
+│       ├── certificate.pem
+│       ├── chain_certificate.pem
+│       └── private.key
 ├── playbooks
 │   ├── ansible.yml
 │   ├── consul.yml
 │   ├── deploy.yml
+│   ├── gitlab.yml
 │   ├── jenkins.yml
 │   ├── ladder.yml
 │   ├── mail.yml
@@ -113,6 +119,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   ├── consul
 │   ├── gcloud
 │   ├── gem
+│   ├── gitlab
 │   ├── limits
 │   ├── memcached
 │   ├── mysql
