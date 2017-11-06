@@ -1,0 +1,102 @@
+---
+
+- name: Jenkins Server Tasks
+  hosts: jenkins
+  become: true
+  tags: jenkins
+  pre_tasks:
+    - name: Create SSL certificate Directory
+      tags: ssl
+      file: path="{{ jenkins_nginx_ssl_cert_path }}" state=directory owner=root group=root mode=0755
+
+    - name: Copy Jenkins SSL file
+      tags: ssl
+      copy:
+        src: ../keys/ssl/{{ item }}
+        dest: "{{ jenkins_nginx_ssl_cert_path }}/{{ item }}"
+        owner: root
+        group: root
+        mode: 0600
+      with_items:
+        - certificate.crt
+        - private.key
+      register: ssl_result
+
+    - name: Upload Deploy Key
+      copy:
+        src: ../keys/deploy/{{ item.src }}
+        dest: "/home/{{ public_execute_user }}/.ssh/{{ item.dest }}"
+        owner: "{{ public_execute_user }}"
+        group: "{{ public_execute_user }}"
+        mode: 0600
+      with_items:
+        - src: "id_rsa"
+          dest: "gitlab_id_rsa"
+        - src: "id_rsa.pub"
+          dest: "gitlab_id_rsa.pub"
+      tags: deploy_key
+
+    - name: Upload id_rsa
+      copy:
+        src: ../keys/ssh/{{ public_execute_user }}/id_rsa
+        dest: "/home/{{ public_execute_user }}/.ssh/id_rsa"
+        owner: "{{ public_execute_user }}"
+        group: "{{ public_execute_user }}"
+        mode: 0600
+      tags: ssh_key
+
+  roles:
+    - { role: ../roles/galaxy/java, java_packages: "{{ install_java_packages }}" }
+    - role: ../roles/galaxy/jenkins
+      jenkins_version: "{{ install_jenkins_version }}"
+      jenkins_connection_retries: 10
+      jenkins_plugins: "{{ install_jenkins_plugins }}"
+
+    - role: ../roles/galaxy/nginx
+      tags: nginx
+      nginx_package_name: "{{ jenkins_install_nginx_package_name }}"
+      nginx_conf_template: ../../../extends_nginx.conf.j2
+
+      # nginx.conf
+      nginx_upstreams:
+        - name: jenkins
+          servers: ["127.0.0.1:8080 fail_timeout=0"]
+      nginx_keepalive_timeout: "650"
+      nginx_log_format: |
+        'time:$time_iso8601\t'
+        'method:$request_method\t'
+        'status:$status\t'
+        'remote_host:$remote_addr\t'
+        'forwardedfor:$http_x_forwarded_for\t'
+        'reqsize:$request_length\t'
+        'total_size:$bytes_sent\t'
+        'size:$body_bytes_sent\t'
+        'reqtime:$request_time\t'
+        'apptime:$upstream_response_time\t'
+        'reqhost:$http_host\t'
+        'uri:$request_uri\t'
+        'query:$query_string\t'
+        'referer:$http_referer\t'
+        'ua:$http_user_agent\t'
+        'hostname:$hostname\t'
+
+      # conf.d/*.conf
+      nginx_vhosts: "{{ jenkins_install_nginx_vhosts }}"
+
+    # ssh config
+    - role: ../roles/galaxy/ssh-config
+      ssh_config_user: "{{ public_execute_user }}"
+      ssh_config_default:
+        ServerAliveInterval: 300
+        TCPKeepAlive: "yes"
+      ssh_configs:
+        - Host: "gitlab"
+          Hostname: "gitlab.bayguh.jp"
+          IdentityFile: "~/.ssh/gitlab_id_rsa"
+          User: "{{ public_execute_user }}"
+      tags: ssh-config
+
+  post_tasks:
+    - name: restart nginx
+      service: name=nginx state=restarted
+      when: ssl_result

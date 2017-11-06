@@ -1,0 +1,81 @@
+# javaのバージョン
+install_java_packages: ["java-1.8.0-openjdk"]
+
+# jenkinsバージョン
+install_jenkins_version: 2.86
+install_jenkins_plugins:
+  - 'google-login'
+  - 'role-strategy'
+  - 'slack'
+  - 'chatwork'
+  - 'ssh'
+  - 'emotional-jenkins-plugin'
+  - 'git'
+  - 'git-client'
+  - 'gitlab-plugin'
+  - 'gitlab-hook'
+
+# nginx===================================
+# nginxバージョン
+jenkins_install_nginx_package_name: "nginx-1.12.2"
+# サーバ名
+setting_server_name: "jenkins.bayguh.jp"
+# sslディレクトリpath
+jenkins_nginx_ssl_cert_path: "/etc/nginx/conf.d/ssl"
+jenkins_install_nginx_vhosts:
+  - listen: 80
+    server_name: "{{ setting_server_name }}"
+    extra_parameters: |
+      allow 0.0.0.0/0;
+
+      listen       443 ssl default_server;
+      ssl_certificate      {{ jenkins_nginx_ssl_cert_path }}/certificate.crt;
+      ssl_certificate_key  {{ jenkins_nginx_ssl_cert_path }}/private.key;
+
+      ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+      ssl_ciphers 'kEECDH+ECDSA+AES128 kEECDH+ECDSA+AES256 kEECDH+AES128 kEECDH+AES256 kEDH+AES128 kEDH+AES256 DES-CBC3-SHA +SHA !aNULL !eNULL !LOW !kECDH !DSS !MD5 !EXP !PSK !SRP !CAMELLIA !SEED';
+      ssl_stapling on;
+      ssl_session_cache builtin:1000 shared:SSL:10m;
+      add_header Strict-Transport-Security "max-age=15768000; includeSubdomains";
+      ssl_prefer_server_ciphers on;
+
+      location / {
+          proxy_redirect     off;
+          proxy_set_header   X-Forwarded-Proto $scheme;
+          proxy_set_header   Host              $http_host;
+          proxy_set_header   X-Real-IP         $remote_addr;
+          proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+          proxy_set_header   Host $host;
+          proxy_redirect     http:// https://;
+          proxy_pass         http://jenkins;
+
+          access_log      /var/log/nginx/access.log main;
+          error_log       /var/log/nginx/error.log  error;
+      }
+
+  - listen: 80
+    filename: "status.conf"
+    server_name: "127.0.0.1"
+    extra_parameters: |
+      # nginx status
+      location /nginx_status {
+          stub_status on;
+          access_log off;
+          allow 127.0.0.1;
+          deny all;
+      }
+
+#=========================================
+
+# mackerel設定
+install_mackerel_agent_plugins:
+  mackerel-plugin-inode: "/usr/local/bin/mackerel-plugin-inode"
+  mackerel-plugin-linux: "/usr/local/bin/mackerel-plugin-linux"
+  mackerel-plugin-mailq: "/usr/local/bin/mackerel-plugin-mailq -M postfix"
+
+install_mackerel_check_plugins:
+  check-ntpoffset: "/usr/local/bin/check-ntpoffset -w=500"
+
+  check-procs-jenkins: "/usr/local/bin/check-procs --pattern java -u jenkins"
+
+  check-tcp-8080: "/usr/local/bin/check-tcp -p 8080"
