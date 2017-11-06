@@ -1,0 +1,57 @@
+# phpバージョン
+deploy_install_php_version: "7.1.11"
+
+# インストールに必要なリポジトリ
+deploy_install_php_enablerepo: "remi-php71,remi"
+  # phpインストールパッケージ
+deploy_install_php_packages:
+  - php-{{ deploy_install_php_version }}
+  - php-cli-{{ deploy_install_php_version }}
+  - php-common-{{ deploy_install_php_version }}
+  - php-mbstring-{{ deploy_install_php_version }}
+  - php-opcache-{{ deploy_install_php_version }}
+  - php-pdo-{{ deploy_install_php_version }}
+  - php-xml-{{ deploy_install_php_version }}
+  - php-xmlrpc-{{ deploy_install_php_version }}
+  - php-mcrypt-{{ deploy_install_php_version }}
+  - php-process-{{ deploy_install_php_version }}
+  - php-mysqlnd-{{ deploy_install_php_version }}
+  - php-bcmath-{{ deploy_install_php_version }}
+  - php-intl-{{ deploy_install_php_version }}
+  - php-pecl-apcu
+  - php-pecl-memcached
+  - php-pecl-redis
+  - php-pecl-zip
+  - php-pear
+  - php-timecop
+# phpインストールパッケージ
+deploy_install_php_packages_not_version:
+  - php
+  - php-cli
+  - php-common
+  - php-mbstring
+  - php-opcache
+  - php-pdo
+  - php-xml
+  - php-xmlrpc
+  - php-mcrypt
+  - php-process
+  - php-mysqlnd
+  - php-bcmath
+  - php-intl
+  - php-pecl-apcu
+  - php-pecl-memcached
+  - php-pecl-redis
+  - php-pecl-zip
+  - php-pear
+  - php-timecop
+# composerバージョン
+deploy_install_composer_version: "1.5.2"
+
+# インストールgem
+install_gem_executable: "/opt/anyenv/envs/rbenv/shims/gem"
+deploy_install_gem_packages:
+  - name: rake
+    executable: "{{ install_gem_executable }}"
+  - name: standalone_migrations
+    executable: "{{ install_gem_executable }}"

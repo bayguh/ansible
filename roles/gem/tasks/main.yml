@@ -1,0 +1,16 @@
+---
+- name: Ensure gem is installed.
+  package: name=rubygems state=present
+
+- name: Ensure gem_install_packages are installed.
+  gem:
+    name: "{{ item.name | default(item) }}"
+    version: "{{ item.version | default(omit) }}"
+    state: "{{ item.state | default('present') }}"
+    executable: "{{ item.executable | default(omit) }}"
+    gem_source: "{{ item.gem_source | default(omit) }}"
+    include_dependencies: "{{ item.include_dependencies | default(omit) }}"
+    pre_release: "{{ item.pre_release | default(omit) }}"
+    repository: "{{ item.repository | default(omit) }}"
+    user_install: "{{ item.user_install | default(false)|bool }}"
+  with_items: "{{ gem_install_packages }}"

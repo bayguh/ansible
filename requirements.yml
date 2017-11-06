@@ -63,6 +63,11 @@
   name: composer
   version: 1.6.1
 
+# https://galaxy.ansible.com/wunzeco/ssh-config/
+- src: wunzeco.ssh-config
+  name: ssh-config
+  version: v1.1
+
 # https://galaxy.ansible.com/mackerelio/mackerel-agent/
 - src: mackerelio.mackerel-agent
   name: mackerel

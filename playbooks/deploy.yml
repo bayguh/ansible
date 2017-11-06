@@ -1,0 +1,61 @@
+---
+
+- name: Deploy Server Tasks
+  hosts: deploy
+  become: true
+  tags: deploy
+  pre_tasks:
+    - name: Upload Deploy Key
+      copy:
+        src: ../keys/deploy/{{ item.src }}
+        dest: "/home/{{ public_execute_user }}/.ssh/{{ item.dest }}"
+        owner: "{{ public_execute_user }}"
+        group: "{{ public_execute_user }}"
+        mode: 0600
+      with_items:
+        - src: "id_rsa"
+          dest: "gitlab_id_rsa"
+        - src: "id_rsa.pub"
+          dest: "gitlab_id_rsa.pub"
+      tags: deploy_key
+
+    - name: Upload id_rsa
+      copy:
+        src: ../keys/ssh/{{ public_execute_user }}/id_rsa
+        dest: "/home/{{ public_execute_user }}/.ssh/id_rsa"
+        owner: "{{ public_execute_user }}"
+        group: "{{ public_execute_user }}"
+        mode: 0600
+      tags: ssh_key
+
+  roles:
+    # php
+    - { role: ../roles/php_version_check, php_version: "{{ deploy_install_php_version }}", php_packages_not_version: "{{ deploy_install_php_packages_not_version }}", tags: php }
+    - role: ../roles/galaxy/php
+      tags: php
+      php_enablerepo: "{{ deploy_install_php_enablerepo }}"
+      php_packages: "{{ deploy_install_php_packages }}"
+      php_expose_php: "Off"
+      php_date_timezone: "Asia/Tokyo"
+      php_apc_enable_cli: "1"
+      php_enable_webserver: false
+
+    # composer
+    - { role: ../roles/composer_version_check, composer_version: "{{ deploy_install_composer_version }}", tags: composer }
+    - { role: ../roles/galaxy/composer, composer_version: "{{ deploy_install_composer_version }}", tags: composer }
+
+    # gem
+    - { role: ../roles/gem, gem_install_packages: "{{ deploy_install_gem_packages }}", tags: gem }
+
+    # ssh config
+    - role: ../roles/galaxy/ssh-config
+      ssh_config_user: "{{ public_execute_user }}"
+      ssh_config_default:
+        ServerAliveInterval: 300
+        TCPKeepAlive: "yes"
+      ssh_configs:
+        - Host: "gitlab"
+          Hostname: "gitlab.bayguh.jp"
+          IdentityFile: "~/.ssh/gitlab_id_rsa"
+          User: "{{ public_execute_user }}"
+      tags: ssh-config

@@ -50,6 +50,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   │   ├── all.yml
 │   │   ├── ansible.yml
 │   │   ├── consul.yml
+│   │   ├── deploy.yml
 │   │   ├── ladder.yml
 │   │   ├── mail.yml
 │   │   ├── memcache.yml
@@ -78,6 +79,9 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   ├── shd.ini
 │   └── stg.ini
 ├── keys
+│   ├── deploy
+│   │   ├── id_rsa
+│   │   └── id_rsa.pub
 │   ├── ssh
 │   │   ├── access_key
 │   │   ├── access_key.pub
@@ -88,6 +92,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 ├── playbooks
 │   ├── ansible.yml
 │   ├── consul.yml
+│   ├── deploy.yml
 │   ├── ladder.yml
 │   ├── mail.yml
 │   ├── memcache.yml
@@ -105,6 +110,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   ├── composer_version_check
 │   ├── consul
 │   ├── gcloud
+│   ├── gem
 │   ├── limits
 │   ├── memcached
 │   ├── mysql
@@ -127,6 +133,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │       ├── postfix
 │       ├── remi
 │       ├── selinux
+│       ├── ssh-config
 │       └── users_and_groups
 └── site.yml
 ```
