@@ -131,6 +131,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   └── galaxy
 │       ├── anyenv
 │       ├── composer
+│       ├── datadog
 │       ├── epel
 │       ├── java
 │       ├── jenkins
