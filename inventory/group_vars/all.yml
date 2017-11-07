@@ -75,10 +75,10 @@ install_google_cloud_sdk_sha256sum: a09ff738ea9b3c9af906ee42e8ded48b84388574944d
 # ===========================================================
 
 # mackerelの設定をするかどうか
-mackerel_flag: true
+mackerel_flag: false
 
-# mackerel-agent-apikey
-install_mackerel_agent_apikey: "cqJtSfEzzyee3UPb9znBYvbE21EtNtmp59FDuv6JR4Lg"
+# mackerel-agent-apikey (https://mackerel.io/orgs/[プロジェクト名]?tab=apikeys)
+install_mackerel_agent_apikey: "api_key"
 install_mackerel_agent_roles: ["{{ env_variable }}:{{ server }}"]
 
 # mackerel agent設定
@@ -89,3 +89,24 @@ install_mackerel_agent_plugins:
 
 install_mackerel_check_plugins:
   check-ntpoffset: "/usr/local/bin/check-ntpoffset -w=500"
+
+# ===========================================================
+
+# datadogの設定をするかどうか
+datadog_flag: false
+
+# agent 5 or 6
+install_datadog_agent6: false
+# agent version
+install_datadog_agent_version: "5.18.1-1"
+# api key (https://app.datadoghq.com/account/settings#api)
+install_datadog_api_key: "api_key"
+# agent running設定
+install_datadog_enabled: true
+
+# config設定
+install_datadog_config:
+  tags: "{{ env_variable }}, {{ server }}"
+  log_level: INFO
+install_datadog_config_ex: {}
+install_datadog_checks: {}

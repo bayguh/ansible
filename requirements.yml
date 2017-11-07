@@ -83,6 +83,11 @@
   name: mackerel
   version: v0.7.0
 
+# https://galaxy.ansible.com/Datadog/datadog/
+- src: Datadog.datadog
+  name: datadog
+  version: 1.4.0
+
 
 # 修正して使用(roles以下)=======================================================
 
