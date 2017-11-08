@@ -110,3 +110,16 @@ install_datadog_config:
   log_level: INFO
 install_datadog_config_ex: {}
 install_datadog_checks: {}
+
+# ===========================================================
+
+# newrelicの設定をするかどうか
+newrelic_flag: false
+
+# licence key (https://rpm.newrelic.com/accounts/[プロジェクト番号])
+install_newrelic_license_key: "license_key"
+# agent running設定
+install_newrelic_service_state: started
+install_newrelic_labels:
+  - "{{ env_variable }}:{{ server }}"
+

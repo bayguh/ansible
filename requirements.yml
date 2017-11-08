@@ -88,6 +88,11 @@
   name: datadog
   version: 1.4.0
 
+# https://galaxy.ansible.com/franklinkim/newrelic/
+- src: franklinkim.newrelic
+  name: newrelic
+  version: 1.7.0
+
 
 # 修正して使用(roles以下)=======================================================
 

@@ -29,3 +29,9 @@
       tags: datadog
 
     # newrelicインストール
+    - role: ../../roles/galaxy/newrelic
+      when: newrelic_flag
+      newrelic_license_key: "{{ install_newrelic_license_key }}"
+      newrelic_service_state: "{{ install_newrelic_service_state }}"
+      newrelic_labels: "{{ install_newrelic_labels }}"
+      tags: newrelic
