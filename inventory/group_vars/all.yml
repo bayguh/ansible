@@ -18,6 +18,8 @@ install_common_package_list:
     state: latest
   - name: htop
     state: latest
+  - name: telnet
+    state: latest
   - name: zlib-devel
   - name: bzip2
   - name: bzip2-devel
