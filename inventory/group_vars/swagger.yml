@@ -1,14 +1,14 @@
-# consul設定
-install_consul_node_type: "server"
+# nodeバージョン
+install_nodejs_version: "6.x"
 
-# mackerel設定
-install_mackerel_check_plugins:
-  check-ntpoffset: "/usr/local/bin/check-ntpoffset -w=500"
+# npmパッケージ
+npm_packages:
+  - name: pm2
 
-  check-procs-consul: "/usr/local/bin/check-procs --pattern /usr/local/bin/consul"
-
-  check-tcp-8300: "/usr/local/bin/check-tcp -p 8300"
-  check-tcp-8301: "/usr/local/bin/check-tcp -p 8301"
+# 配置ディレクトリ
+swagger_editor_dir: "/home/{{ public_execute_user }}/swagger_editor"
+# swagger_editorバージョン
+swagger_editor_version: "v3.1.18"
 
 # datadog設定
 install_datadog_checks:
@@ -27,9 +27,13 @@ install_datadog_checks:
         search_string: ['ntpd']
       - name: consul
         search_string: ['consul']
+      - name: swagger
+        search_string: ["/home/{{ public_execute_user }}/swagger_editor/node_modules/.bin/npm-run-all", "/home/{{ public_execute_user }}/swagger_editor/node_modules/.bin/http-server"]
+        exact_match: false
   tcp_check:
     init_config:
       min_collection_interval: 15
+      skip_event: true
     instances:
       - name: ssh 22
         host: 127.0.0.1
@@ -51,11 +55,7 @@ install_datadog_checks:
         host: 127.0.0.1
         port: 8600
         skip_event: true
-      - name: consul 8300
+      - name: swagger 3001
         host: 127.0.0.1
-        port: 8300
-        skip_event: true
-      - name: consul 8302
-        host: 127.0.0.1
-        port: 8302
+        port: 3001
         skip_event: true

@@ -78,6 +78,11 @@
   name: jenkins
   version: 3.2.2
 
+# https://galaxy.ansible.com/geerlingguy/nodejs/
+- src: geerlingguy.nodejs
+  name: nodejs
+  version: 4.1.2
+
 # https://galaxy.ansible.com/mackerelio/mackerel-agent/
 - src: mackerelio.mackerel-agent
   name: mackerel
@@ -92,7 +97,6 @@
 - src: franklinkim.newrelic
   name: newrelic
   version: 1.7.0
-
 
 # 修正して使用(roles以下)=======================================================
 

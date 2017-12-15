@@ -157,3 +157,56 @@ install_mackerel_check_plugins:
   check-tcp-3306: "/usr/local/bin/check-tcp -p 3306"
   check-tcp-11211: "/usr/local/bin/check-tcp -p 11211"
 
+# datadog設定
+install_datadog_checks:
+  process:
+    init_config:
+      min_collection_interval: 15
+    instances:
+      - name: sshd
+        search_string: ['sshd']
+      - name: rsyslogd
+        search_string: ['rsyslogd']
+      - name: postfix
+        search_string: ['/usr/libexec/postfix/master']
+        exact_match: false
+      - name: ntpd
+        search_string: ['ntpd']
+      - name: consul
+        search_string: ['consul']
+      - name: mysqld
+        search_string: ['mysqld', 'mysqld_safe']
+      - name: memcached
+        search_string: ['memcached']
+  tcp_check:
+    init_config:
+      min_collection_interval: 15
+    instances:
+      - name: ssh 22
+        host: 127.0.0.1
+        port: 22
+        skip_event: true
+      - name: postfix 25
+        host: 127.0.0.1
+        port: 25
+        skip_event: true
+      - name: consul 8301
+        host: 127.0.0.1
+        port: 8301
+        skip_event: true
+      - name: consul 8500
+        host: 127.0.0.1
+        port: 8500
+        skip_event: true
+      - name: consul 8600
+        host: 127.0.0.1
+        port: 8600
+        skip_event: true
+      - name: mysql 3306
+        host: 127.0.0.1
+        port: 3306
+        skip_event: true
+      - name: memcache 11211
+        host: 127.0.0.1
+        port: 11211
+        skip_event: true

@@ -1,0 +1,60 @@
+- name: Swagger Server Tasks
+  hosts: swagger
+  become: true
+  tags: swagger
+
+  roles:
+    - role: ../roles/galaxy/nodejs
+      nodejs_version: "{{ install_nodejs_version }}"
+      nodejs_install_npm_user: "{{ public_execute_user }}"
+      nodejs_npm_global_packages: "{{ npm_packages }}"
+      tags: nodejs
+
+  tasks:
+    - name: Upload Deploy Key
+      tags: git
+      copy:
+        src: ../keys/deploy/{{ item }}
+        dest: "/home/{{ public_execute_user }}/.ssh/{{ item }}"
+        owner: "{{ public_execute_user }}"
+        group: "{{ public_execute_user }}"
+        mode: 0600
+      with_items:
+        - "id_rsa"
+        - "id_rsa.pub"
+
+    # ディレクトリチェック
+    - name: ディレクトリの存在チェック
+      stat: path={{ swagger_editor_dir }}
+      register: dir_check
+
+    # swagger editorクローン
+    - name: Swagger Editor | Clone repo
+      tags: swagger_editor
+      git:
+        repo: https://github.com/swagger-api/swagger-editor.git
+        dest: "{{ swagger_editor_dir }}"
+        version: "{{ swagger_editor_version }}"
+
+    - name: Add Start Shell
+      tags: swagger_editor
+      when: not dir_check.stat.exists
+      copy:
+        src: ../script/swagger/start_swagger.sh
+        dest: "{{ swagger_editor_dir }}/start_swagger.sh"
+        owner: "{{ public_execute_user }}"
+        group: "{{ public_execute_user }}"
+        mode: 0755
+
+    - name: Swager Editor Dir Update
+      file:
+        path: "{{ swagger_editor_dir }}"
+        state: directory
+        owner: "{{ public_execute_user }}"
+        group: "{{ public_execute_user }}"
+        recurse: yes
+
+    - name: Swagger Editor | Install dependencies
+      tags: swagger_editor
+      when: not dir_check.stat.exists
+      shell: su - "{{ public_execute_user }}" -c "cd {{ swagger_editor_dir }}; pm2 start start_swagger.sh"
