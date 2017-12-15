@@ -51,7 +51,7 @@ install_datadog_checks:
       - name: consul
         search_string: ['consul']
       - name: gitlab
-        search_string: ['unicorn', 'gitlab-workhorse', 'gitaly-ruby', 'nginx', 'postgres', 'prometheus', 'redis-server']
+        search_string: ['unicorn', 'gitlab-workhorse', 'gitaly-ruby', 'nginx', 'prometheus', 'redis-server']
   tcp_check:
     init_config:
       min_collection_interval: 15
