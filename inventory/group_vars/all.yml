@@ -113,7 +113,41 @@ install_datadog_config:
   tags: "{{ env_variable }}, {{ server }}"
   log_level: INFO
 install_datadog_config_ex: {}
-install_datadog_checks: {}
+install_datadog_checks:
+  process:
+    init_config:
+      min_collection_interval: 15
+    instances:
+      - name: sshd
+        search_string: ['sshd']
+      - name: rsyslogd
+        search_string: ['rsyslogd']
+      - name: postfix
+        search_string: ['/usr/libexec/postfix/master']
+        exact_match: false
+      - name: ntpd
+        search_string: ['ntpd']
+      - name: consul
+        search_string: ['consul']
+  tcp_check:
+    init_config:
+      min_collection_interval: 15
+    instances:
+      - name: ssh 22
+        host: 127.0.0.1
+        port: 22
+      - name: postfix 25
+        host: 127.0.0.1
+        port: 25
+      - name: consul 8301
+        host: 127.0.0.1
+        port: 8301
+      - name: consul 8500
+        host: 127.0.0.1
+        port: 8500
+      - name: consul 8600
+        host: 127.0.0.1
+        port: 8600
 
 # ===========================================================
 
