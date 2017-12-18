@@ -59,9 +59,9 @@ install_nginx_vhosts:
     server_name: "{{ ansible_eth0.ipv4.address }}"
     extra_parameters: |
       root   /var/www/app/current;
+      access_log /var/log/nginx/helth_check.log main;
 
       location ~ \.php$ {
-          if ($request_uri = '/health_check') { access_log /var/log/nginx/health_check.log ltsv; }
           root   /var/www/app/current;
           fastcgi_pass 127.0.0.1:9000;
           fastcgi_index index.php;
