@@ -54,6 +54,10 @@ install_mysql_users:
     host: "127.0.0.1"
     password: "mackerel_user"
     priv: "*.*:SELECT,PROCESS,REPLICATION CLIENT"
+  - name: datadog_user
+    host: "127.0.0.1"
+    password: "datadog_user"
+    priv: "*.*:SELECT,PROCESS,REPLICATION CLIENT"
 
 # innodb buffer サイズ
 install_mysql_innodb_buffer_pool_size: "1G"
@@ -119,3 +123,17 @@ install_datadog_checks:
         host: 127.0.0.1
         port: 3306
         skip_event: true
+  postfix:
+    init_config:
+    instances:
+      - directory: /var/spool/postfix
+        queues:
+          - incoming
+          - active
+          - deferred
+  mysql:
+    init_config:
+    instances:
+      - server: 127.0.0.1
+        user: datadog_user
+        pass: "datadog_user"

@@ -51,7 +51,7 @@
       php_fpm_pm_min_spare_servers: 5
       php_fpm_pm_max_spare_servers: 35
 
-    - { role: ../roles/php-fpm_status, php_fpm_pm_status_path: "/php_fpm_status", tags: php }
+    - { role: ../roles/php-fpm_status, php_fpm_pm_status_path: "/php_fpm_status", php_fpm_ping_path: "/php_fpm_ping", tags: php }
     - { role: ../roles/composer_version_check, composer_version: "{{ install_composer_version }}", tags: composer }
     - { role: ../roles/galaxy/composer, composer_version: "{{ install_composer_version }}", tags: composer }
 

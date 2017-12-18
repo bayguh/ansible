@@ -54,6 +54,16 @@ install_nginx_vhosts:
           deny all;
       }
 
+      # php-fpm ping
+      location /php_fpm_ping {
+          include /etc/nginx/fastcgi_params;
+          fastcgi_param SCRIPT_FILENAME /php_fpm_ping;
+          fastcgi_pass 127.0.0.1:9000;
+          access_log off;
+          allow 127.0.0.1;
+          deny all;
+      }
+
   - listen: 80
     filename: "health_check.conf"
     server_name: "{{ ansible_eth0.ipv4.address }}"
@@ -204,3 +214,21 @@ install_datadog_checks:
         host: 127.0.0.1
         port: 80
         skip_event: true
+  postfix:
+    init_config:
+    instances:
+      - directory: /var/spool/postfix
+        queues:
+          - incoming
+          - active
+          - deferred
+  nginx:
+    init_config:
+    instances:
+      - nginx_status_url: http://127.0.0.1/nginx_status/
+  php_fpm:
+    init_config:
+    instances:
+      - status_url: http://127.0.0.1/php_fpm_status
+        ping_url: http://127.0.0.1/php_fpm_ping
+        ping_reply: pong

@@ -153,6 +153,14 @@ install_datadog_checks:
         host: 127.0.0.1
         port: 8600
         skip_event: true
+  postfix:
+    init_config:
+    instances:
+      - directory: /var/spool/postfix
+        queues:
+          - incoming
+          - active
+          - deferred
 
 # ===========================================================
 
