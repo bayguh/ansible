@@ -54,6 +54,30 @@ install_nginx_vhosts:
           deny all;
       }
 
+  - listen: 80
+    filename: "health_check.conf"
+    server_name: "{{ ansible_eth0.ipv4.address }}"
+    extra_parameters: |
+      root   /var/www/app/current;
+
+      location ~ \.php$ {
+          if ($request_uri = '/health_check') { access_log /var/log/nginx/health_check.log ltsv; }
+          root   /var/www/app/current;
+          fastcgi_pass 127.0.0.1:9000;
+          fastcgi_index index.php;
+          fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+          include fastcgi_params;
+      }
+
+      location / {
+          root   /var/www/app/current;
+          index  index.php;
+
+          if (!-e $request_filename) {
+              rewrite ^(.*)$ /index.php?q=$1 last;
+          }
+      }
+
 #=========================================
 
 # php=====================================

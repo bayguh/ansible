@@ -12,12 +12,12 @@
       postfix_relayhost: "{{ setting_postfix_relayhost }}"
 
   tasks:
-    - name: Ignore mail helth check log
+    - name: Ignore mail health check log
       blockinfile:
         path: /etc/rsyslog.conf
         insertbefore: mail.*
         block: |
-          if $msg contains '130.211.0' or $msg contains '130.211.1' or $msg contains '130.211.2' or  $msg contains '130.211.0' or $msg contains '35.191' then /var/log/mail_helthcheck.log
+          if $msg contains '130.211.0' or $msg contains '130.211.1' or $msg contains '130.211.2' or  $msg contains '130.211.0' or $msg contains '35.191' then /var/log/mail_healthcheck.log
           & ~
       register: hc_setting
 
