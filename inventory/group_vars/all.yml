@@ -110,7 +110,7 @@ install_datadog_enabled: true
 
 # config設定
 install_datadog_config:
-  tags: "{{ env_variable }}, {{ server }}"
+  tags: "env:{{ env_variable }}, server_type:{{ server }}"
   log_level: INFO
 install_datadog_config_ex: {}
 install_datadog_checks:
