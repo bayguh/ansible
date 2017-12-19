@@ -1,5 +1,6 @@
 # consul設定
 install_consul_node_type: "server"
+install_consul_extra_opts: "-ui"
 
 # mackerel設定
 install_mackerel_check_plugins:
