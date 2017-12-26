@@ -42,6 +42,17 @@
     # anyenvのインストール
     - { role: ../../roles/galaxy/anyenv, install_env: "{{ install_common_env_list }}", tags: anyenv }
 
+  tasks:
+    # anacronがyumを自動updateする処理をoffする対応
+    - name: anacron yum update off
+      when: ansible_os_family == "RedHat"
+      tags: anacron
+      file:
+        path: "/etc/cron.daily/{{ item }}"
+        state: absent
+      with_items:
+        - 0yum.cron
+        - 0yum-daily.cron
 
 # フラグをみて実行するもの
 - name: Sub Common Role Execute
