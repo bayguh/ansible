@@ -58,6 +58,9 @@ install_mysql_users:
     host: "127.0.0.1"
     password: "datadog_user"
     priv: "*.*:SELECT,PROCESS,REPLICATION CLIENT"
+  - name: haproxy_user
+    host: "10.0.%"
+    priv: "*.*:USAGE"
 
 # innodb buffer サイズ
 install_mysql_innodb_buffer_pool_size: "1G"

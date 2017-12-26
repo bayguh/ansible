@@ -52,6 +52,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   │   ├── consul.yml
 │   │   ├── deploy.yml
 │   │   ├── gitlab.yml
+│   │   ├── haproxy.yml
 │   │   ├── jenkins.yml
 │   │   ├── ladder.yml
 │   │   ├── mail.yml
@@ -100,6 +101,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   ├── consul.yml
 │   ├── deploy.yml
 │   ├── gitlab.yml
+│   ├── haproxy.yml
 │   ├── jenkins.yml
 │   ├── ladder.yml
 │   ├── mail.yml
@@ -120,6 +122,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   ├── gcloud
 │   ├── gem
 │   ├── gitlab
+│   ├── haproxy
 │   ├── limits
 │   ├── memcached
 │   ├── mysql

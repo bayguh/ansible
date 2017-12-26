@@ -1,0 +1,51 @@
+---
+
+- name: Haproxy Server Tasks
+  hosts: haproxy
+  become: true
+  tags: haproxy
+  roles:
+    - role: ../roles/haproxy
+      config_file_name: "{{ install_config_file_name }}"
+
+  tasks:
+    - name: Create hatop src directory
+      tags: hatop
+      file:
+        path: "{{ hatop_src_dir }}"
+        state: directory
+
+    - name: Check if hatop is installed.
+      tags: hatop
+      stat:
+        path: "{{ hatop_install_dir }}/hatop"
+      register: hatop_bin
+
+    - name: Download hatop binary
+      tags: hatop
+      get_url:
+        url: "{{ hatop_download_url }}"
+        dest: "{{ hatop_src_dir }}"
+      when: not hatop_bin.stat.exists
+
+    - name: Unarchive hatop
+      tags: hatop
+      unarchive:
+        src: "{{ hatop_src_dir }}/{{ hatop_archive_name }}"
+        dest: "{{ hatop_src_dir }}"
+        remote_src: yes
+      when: not hatop_bin.stat.exists
+
+    - name: Ensure hatop binary is installed
+      tags: hatop
+      shell: >
+        cd {{ hatop_src_dir }}/{{ hatop_dir_name }} && install -m 755 bin/hatop {{ hatop_install_dir }}
+        creates={{ hatop_install_dir }}/hatop
+      when: not hatop_bin.stat.exists
+
+    - name: Ensure hatop man file is installed
+      tags: hatop
+      shell: >
+        cd {{ hatop_src_dir }}/{{ hatop_dir_name }} && install -m 644 man/hatop.1 /usr/local/share/man/man1
+        creates=/usr/local/share/man/man1/hatop.1
+      when: not hatop_bin.stat.exists
