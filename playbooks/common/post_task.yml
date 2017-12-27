@@ -16,6 +16,20 @@
       mackerel_check_plugins: "{{ install_mackerel_check_plugins }}"
       tags: mackerel
 
+    - role: ../../roles/galaxy/users_and_groups
+      when: datadog_flag
+      users_and_groups:
+        groups: []
+        users: []
+        sudoers:
+          - name: dd-agent
+            user: "%dd-agent"
+            runas: "ALL=(ALL)"
+            commands: "NOPASSWD:/usr/bin/find"
+        whitelist_groups: []
+        authorized_keys_dir: ~
+      tags: datadog
+
     # datadogインストール
     - role: ../../roles/galaxy/datadog
       when: datadog_flag
