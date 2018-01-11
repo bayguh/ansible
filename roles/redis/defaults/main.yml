@@ -38,7 +38,7 @@ redis_timeout: 0
 redis_tcp_keepalive: 300
 redis_daemonize: "no"
 redis_supervised: "no"
-redis_pidfile: /var/run/redis/{{ redis_port }}.pid
+redis_pidfile: /var/run/redis/redis_{{ redis_port }}.pid
 redis_loglevel: notice
 redis_logfile: /var/log/redis/redis.log
 redis_syslog_enabled: "no"
