@@ -1,0 +1,11 @@
+---
+
+- name: Configure php-fpm listen.owner and listen.group
+  blockinfile:
+    path: "/etc/php-fpm.d/www.conf"
+    marker: "; {mark} ANSIBLE MANAGED BLOCK LISTEN"
+    insertafter: ";listen.group = nobody"
+    block: |
+      listen.owner = {{ listen_owner }}
+      listen.group = {{ listen_group }}
+  notify: restart php-fpm

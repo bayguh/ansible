@@ -1,23 +1,17 @@
 ---
 
 - name: Configure php-fpm status
-  lineinfile:
-    dest: "/etc/php-fpm.d/www.conf"
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
-    state: present
-  with_items:
-    - regexp: '^pm\.status_path.?=.+$'
-      line: "pm.status_path = {{ php_fpm_pm_status_path }}"
+  blockinfile:
+    path: "/etc/php-fpm.d/www.conf"
+    marker: "; {mark} ANSIBLE MANAGED BLOCK STATUS"
+    insertafter: ";pm.status_path = /status"
+    block: "pm.status_path = {{ php_fpm_pm_status_path }}"
   notify: restart php-fpm
 
 - name: Configure php-fpm ping
-  lineinfile:
-    dest: "/etc/php-fpm.d/www.conf"
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
-    state: present
-  with_items:
-    - regexp: '^ping.path.?=.+$'
-      line: "ping.path = {{ php_fpm_ping_path }}"
+  blockinfile:
+    path: "/etc/php-fpm.d/www.conf"
+    marker: "; {mark} ANSIBLE MANAGED BLOCK PING"
+    insertafter: ";ping.path = /ping"
+    block: "ping.path = {{ php_fpm_ping_path }}"
   notify: restart php-fpm

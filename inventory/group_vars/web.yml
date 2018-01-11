@@ -12,7 +12,7 @@ install_nginx_vhosts:
     extra_parameters: |
       location ~ \.php$ {
           root   /var/www/app/current;
-          fastcgi_pass 127.0.0.1:9000;
+          fastcgi_pass unix:/var/run/php-fpm/php-fpm.sock;
           fastcgi_index index.php;
           fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
           include fastcgi_params;
@@ -48,7 +48,7 @@ install_nginx_vhosts:
       location /php_fpm_status {
           include /etc/nginx/fastcgi_params;
           fastcgi_param SCRIPT_FILENAME /php_fpm_status;
-          fastcgi_pass 127.0.0.1:9000;
+          fastcgi_pass unix:/var/run/php-fpm/php-fpm.sock;
           access_log off;
           allow 127.0.0.1;
           deny all;
@@ -58,7 +58,7 @@ install_nginx_vhosts:
       location /php_fpm_ping {
           include /etc/nginx/fastcgi_params;
           fastcgi_param SCRIPT_FILENAME /php_fpm_ping;
-          fastcgi_pass 127.0.0.1:9000;
+          fastcgi_pass unix:/var/run/php-fpm/php-fpm.sock;
           access_log off;
           allow 127.0.0.1;
           deny all;
@@ -73,7 +73,7 @@ install_nginx_vhosts:
 
       location ~ \.php$ {
           root   /var/www/app/current;
-          fastcgi_pass 127.0.0.1:9000;
+          fastcgi_pass unix:/var/run/php-fpm/php-fpm.sock;
           fastcgi_index index.php;
           fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
           include fastcgi_params;

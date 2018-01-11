@@ -44,13 +44,15 @@
       php_webserver_daemon: "nginx"
       php_apc_enable_cli: "1"
       php_enable_php_fpm: true
-      php_fpm_listen: 127.0.0.1:9000
+      php_fpm_listen: /var/run/php-fpm/php-fpm.sock
       php_fpm_pool_user: "nginx"
       php_fpm_pool_group: "nginx"
+      php_fpm_pm_max_children: 50
       php_fpm_pm_start_servers: 5
       php_fpm_pm_min_spare_servers: 5
       php_fpm_pm_max_spare_servers: 35
 
+    - { role: ../roles/php-fpm_sock, listen_owner: "nginx", listen_group: "nginx", tags: php }
     - { role: ../roles/php-fpm_status, php_fpm_pm_status_path: "/php_fpm_status", php_fpm_ping_path: "/php_fpm_ping", tags: php }
     - { role: ../roles/composer_version_check, composer_version: "{{ install_composer_version }}", tags: composer }
     - { role: ../roles/galaxy/composer, composer_version: "{{ install_composer_version }}", tags: composer }
