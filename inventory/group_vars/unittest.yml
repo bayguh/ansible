@@ -53,6 +53,7 @@ unittest_install_mysql_users:
 
 # innodb buffer サイズ
 unittest_install_mysql_innodb_buffer_pool_size: "1G"
+unittest_install_mysql_slow_query_time: "0.5"
 
 #=========================================
 

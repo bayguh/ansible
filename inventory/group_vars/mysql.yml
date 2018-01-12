@@ -64,6 +64,7 @@ install_mysql_users:
 
 # innodb buffer サイズ
 install_mysql_innodb_buffer_pool_size: "1G"
+install_mysql_slow_query_time: "0.5"
 
 # mackerel設定
 install_mackerel_agent_plugins:

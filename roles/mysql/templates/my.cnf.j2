@@ -1,130 +1,230 @@
 # {{ ansible_managed }}
 
+[client]
+port                           = {{ mysql_port }}
+socket                         = {{ mysql_socket }}
+default-character-set          = utf8
+
+[mysql]
+default-character-set          = utf8
+
+[mysqldump]
+quick
+max_allowed_packet             = {{ mysql_mysqldump_max_allowed_packet }}
+default-character-set          = utf8
+
+[mysqld_safe]
+log-error                      = {{ mysql_log_error }}
+pid-file                       = {{ mysql_pid_file }}
+
 [mysqld]
-validate-password=OFF
+##--------------------------------------------------------------------
+# mysqldの基本設定
+##--------------------------------------------------------------------
+port                           = {{ mysql_port }}
+socket                         = {{ mysql_socket }}
+pid-file                       = {{ mysql_pid_file }}
 
-datadir = {{ mysql_datadir }}
-socket = {{ mysql_socket }}
+# 文字セット指定
+character-set-server           = utf8
+collation-server               = utf8_general_ci
 
-# Disabling symbolic-links is recommended to prevent assorted security risks
-symbolic-links = 0
+# Replicationを使うときには重複されてはいけない
+server-id                      = {{ mysql_server_id }}
 
-pid-file = {{ mysql_pid_file }}
+# サーバーを起動するユーザーの指定
+user                           = mysql
 
-character-set-server = {{ mysql_character_set }}
-port = {{ mysql_port }}
-bind-address = {{ mysql_bind_address }}
+# このディレクトリの所有権とグループはuserで指定したユーザーにする必要がある
+datadir                        = {{ mysql_datadir }}
+
+# Defaultのストレージエンジン
+default-storage-engine         = {{ mysql_default_storage_engine }}
+
+##--------------------------------------------------------------------
+# Network 設定
+##--------------------------------------------------------------------
+bind-address                   = {{ mysql_bind_address }}
+
+# サーバーに接続したClientの確認のためにIPを利用してClientのドメインを探すのを防ぐ
+# これを設定するとサーバーに接続したClientを定義するときにHostのFieldにドメインを使ってはいけない、IPのみ使用可能。
+# Clientのドメインを探す作業がなくなるので、性能がよくなる
 {% if mysql_skip_name_resolve %}
 skip-name-resolve
 {% endif %}
-{% if mysql_sql_mode %}
-sql_mode = {{ mysql_sql_mode }}
-{% endif %}
 
-# Logging configuration.
-{% if mysql_log_error == 'syslog' or mysql_log == 'syslog' %}
-syslog
-syslog-tag = {{ mysql_syslog_tag }}
-{% else %}
-{% if mysql_log %}
-log = {{ mysql_log }}
-{% endif %}
-log-error = {{ mysql_log_error }}
-{% endif %}
+# 最大同時接続の指定
+max_connections                = {{ mysql_max_connections }}
 
+# Clinetが発生させるエラーの限界値を調整するための設定。
+max_connect_errors             = {{ mysql_max_connect_errors }}
+
+# 接続したClientが何もせずにいるときに、Connectionを切断する時間。Defaultは 28800秒(8時間)である。
+wait_timeout                   = {{ mysql_wait_timeout }}
+
+# Clientからサーバーに送るQuery Packetの大きさ
+max_allowed_packet             = {{ mysql_max_allowed_packet }}
+
+##--------------------------------------------------------------------
+# Logging
+##--------------------------------------------------------------------
+# エラーログ
+log-error                      = {{ mysql_log_error }}
+
+# Queryログ 基本は0で出力させない(デバッグの時のみ使用)
+general_log                    = {{ mysql_general_log }}
+general_log_file               = {{ mysql_general_log_file }}
+
+# Slow Queryログ
 {% if mysql_slow_query_log_enabled %}
-# Slow query log configuration.
-slow_query_log = 1
-slow_query_log_file = {{ mysql_slow_query_log_file }}
-long_query_time = {{ mysql_slow_query_time }}
+slow_query_log                 = 1
+{% else %}
+slow_query_log                 = 0
 {% endif %}
-
-{% if mysql_replication_master %}
-# Replication
-server-id = {{ mysql_server_id }}
+long_query_time                = {{ mysql_slow_query_time }}
+slow_query_log_file            = {{ mysql_slow_query_log_file }}
 
 {% if mysql_replication_role == 'master' %}
-
-log_bin = mysql-bin
-log-bin-index = mysql-bin.index
-expire_logs_days = {{ mysql_expire_logs_days }}
-max_binlog_size = {{ mysql_max_binlog_size }}
-binlog_format = {{mysql_binlog_format}}
-
-{% for db in mysql_databases %}
-{% if db.replicate|default(1) %}
-binlog_do_db = {{ db.name }}
-{% else %}
-binlog_ignore_db = {{ db.name }}
-{% endif %}
-{% endfor %}
+# バイナリログ
+log_bin                        = mysql-bin
+log-bin-index                  = mysql-bin.index
+# バイナリログを自動削除する日数
+expire_logs_days               = {{ mysql_expire_logs_days }}
+# バイナリログの最大ファイルサイズ
+max_binlog_size                = {{ mysql_max_binlog_size }}
+# バイナリログフォーマット
+binlog_format                  = {{ mysql_binlog_format }}
 {% endif %}
 
 {% if mysql_replication_role == 'slave' %}
 read_only
-relay-log = relay-bin
-relay-log-index = relay-bin.index
+relay-log                      = relay-bin
+relay-log-index                = relay-bin.index
 {% endif %}
 
-{% endif %}
+##--------------------------------------------------------------------
+# CacheとMemory
+##--------------------------------------------------------------------
+# max_connectionsの１/３ぐらいを目安
+# show statusの(Threads_created / Connections)の結果が0.01以上なら増やす必要があると判断
+thread_cache_size              = {{ mysql_thread_cache_size }}
 
-# User is ignored when systemd is used (fedora >= 15).
-user = mysql
+# すべてのThreadが開いてCacheができるTableの数
+table_open_cache               = {{ mysql_table_open_cache }}
 
-# http://dev.mysql.com/doc/refman/5.5/en/performance-schema.html
-;performance_schema
+# ヒープテーブルサイズ
+max_heap_table_size            = {{ mysql_max_heap_table_size }}
+tmp_table_size                 = {{ mysql_tmp_table_size }}
 
-# Memory settings.
-key_buffer_size = {{ mysql_key_buffer_size }}
-max_allowed_packet = {{ mysql_max_allowed_packet }}
-table_open_cache = {{ mysql_table_open_cache }}
-sort_buffer_size = {{ mysql_sort_buffer_size }}
-read_buffer_size = {{ mysql_read_buffer_size }}
-read_rnd_buffer_size = {{ mysql_read_rnd_buffer_size }}
-myisam_sort_buffer_size = {{ mysql_myisam_sort_buffer_size }}
-thread_cache_size = {{ mysql_thread_cache_size }}
-query_cache_type = {{ mysql_query_cache_type }}
-query_cache_size = {{ mysql_query_cache_size }}
-query_cache_limit = {{ mysql_query_cache_limit }}
-max_connections = {{ mysql_max_connections }}
-tmp_table_size = {{ mysql_tmp_table_size }}
-max_heap_table_size = {{ mysql_max_heap_table_size }}
-group_concat_max_len = {{ mysql_group_concat_max_len }}
-join_buffer_size = {{ mysql_join_buffer_size }}
+# ソートの際に利用される領域
+sort_buffer_size               = {{ mysql_sort_buffer_size }}
 
-# Other settings.
-wait_timeout = {{ mysql_wait_timeout }}
-lower_case_table_names = {{ mysql_lower_case_table_names }}
-event_scheduler = {{ mysql_event_scheduler_state }}
+# 全文検索の時に使用される領域
+read_buffer_size               = {{ mysql_read_buffer_size }}
 
-# InnoDB settings.
-{% if mysql_supports_innodb_large_prefix %}
-innodb_large_prefix = {{ mysql_innodb_large_prefix }}
-innodb_file_format = {{ mysql_innodb_file_format }}
-{% endif %}
-innodb_file_per_table = {{ mysql_innodb_file_per_table }}
-innodb_buffer_pool_size = {{ mysql_innodb_buffer_pool_size }}
-innodb_log_file_size = {{ mysql_innodb_log_file_size }}
-innodb_log_buffer_size = {{ mysql_innodb_log_buffer_size }}
+# ソート後にレコードを読むときに使われる領域
+read_rnd_buffer_size           = {{ mysql_read_rnd_buffer_size }}
+
+# インデックスを用いない全文検索を伴うテーブル結合において、レコードデータキャッシュに使われる領域
+join_buffer_size               = {{ mysql_join_buffer_size }}
+
+# Queryキャッシュの有無
+query_cache_type               = {{ mysql_query_cache_type }}
+
+# Queryの結果をCacheするためのメモリ領域
+query_cache_size               = {{ mysql_query_cache_size }}
+
+# 一つのQueryごとの結果をCacheする量を制限
+query_cache_limit              = {{ mysql_query_cache_limit }}
+
+##--------------------------------------------------------------------
+# MyISAM
+##--------------------------------------------------------------------
+# MyISAMテーブルに対して索引検索をする際にそのインデックス情報を格納する領域
+key_buffer_size                = {{ mysql_key_buffer_size }}
+
+# bulk insertなどを使うときに使用するBuffer領域
+bulk_insert_buffer_size        = {{ mysql_bulk_insert_buffer_size }}
+
+# CREATE INDEX, ALTE TABLEなどでIndexを生成したりするのにIndexの整列が必要な時使うBuffer
+myisam_sort_buffer_size        = {{ mysql_myisam_sort_buffer_size }}
+
+# REPAIR_TABLE, ALTER_TABLE, LOAD_DATA_INFILE の中で MyISAM Indexを再生成しなければならない時に許可する臨時ファイルの最大値
+myisam_max_sort_file_size      = {{ mysql_myisam_max_sort_file_size }}
+
+##--------------------------------------------------------------------
+# InnoDB behavior
+##--------------------------------------------------------------------
+# InnoDBのBackground ThreadのRead/WriteのThreadの数
+innodb_read_io_threads         = {{ mysql_innodb_read_io_threads }}
+innodb_write_io_threads        = {{ mysql_innodb_write_io_threads }}
+
+# "SHOW TABLE STATUS", "SHOW INDEX" の情報を INFORMATION_SCHEMAのテーブルの統計に更新する
+innodb_stats_on_metadata       = {{ mysql_innodb_stats_on_metadata }}
+
+# innodbでのdirty pagesのパーセンテージ
+innodb_max_dirty_pages_pct     = {{ mysql_innodb_max_dirty_pages_pct }}
+
+# Innodb apaptive hash index の利用有無
+innodb_adaptive_hash_index     = {{ mysql_innodb_adaptive_hash_index }}
+
+# InnoDB buffer poolでdirty pagesをFlushする比率を動的に調節するかどうかを決める
+innodb_adaptive_flushing       = {{ mysql_innodb_adaptive_flushing }}
+
+# insert bufferからInnoDBのBackgroundタスクのI/O上限値を設定
+innodb_io_capacity             = {{ mysql_innodb_io_capacity }}
+
+# auto-incrementの値を生成するときにlock modeを決める
+innodb_autoinc_lock_mode       = {{ mysql_innodb_autoinc_lock_mode }}
+
+##--------------------------------------------------------------------
+# InnoDB base
+##--------------------------------------------------------------------
+# InnoDBに対する各種操作の他、レコードデータなどのキャッシュ領域
+innodb_buffer_pool_size        = {{ mysql_innodb_buffer_pool_size }}
+
+# システムテーブルスペースの代わりにデータとインデックスを別のファイルに保存する
+innodb_file_per_table          = {{ mysql_innodb_file_per_table }}
+
+# ロググループの各ログファイルのサイズ
+innodb_log_file_size           = {{ mysql_innodb_log_file_size }}
+
+# トランザクションログを管理し、InnoDB専用スレッドやサーバスレッドがアクセスする領域
+innodb_log_buffer_size         = {{ mysql_innodb_log_buffer_size }}
+
+# InnoDB transactionがrow lockなった時の待機時間
+innodb_lock_wait_timeout       = {{ mysql_innodb_lock_wait_timeout }}
+
+# TransactionがCommitされるたびに、Diskに書くかどうかを決める
 innodb_flush_log_at_trx_commit = {{ mysql_innodb_flush_log_at_trx_commit }}
-innodb_lock_wait_timeout = {{ mysql_innodb_lock_wait_timeout }}
 
+{% if mysql_supports_innodb_large_prefix %}
+innodb_large_prefix            = {{ mysql_innodb_large_prefix }}
+innodb_file_format             = {{ mysql_innodb_file_format }}
+{% endif %}
 
-[client]
-default-character-set = {{ mysql_character_set }}
-port = {{ mysql_port }}
-socket = {{ mysql_socket }}
+##--------------------------------------------------------------------
+# その他
+##--------------------------------------------------------------------
+# シンボリックリンクを使用しない
+symbolic-links                 = {{ mysql_symbolic_links }}
 
+# group_concatの結果の最大長
+group_concat_max_len           = {{ mysql_group_concat_max_len }}
 
-[mysqldump]
-quick
-max_allowed_packet = {{ mysql_mysqldump_max_allowed_packet }}
+# テーブル名の大文字小文字を区別するかどうか
+lower_case_table_names         = {{ mysql_lower_case_table_names }}
 
+# イベントスケジューラ設定
+event_scheduler                = {{ mysql_event_scheduler }}
 
-[mysqld_safe]
-pid-file = {{ mysql_pid_file }}
-
+{% if mysql_sql_mode %}
+sql_mode = {{ mysql_sql_mode }}
+{% endif %}
 
 {% if mysql_config_include_files | length %}
+# * IMPORTANT: Additional settings that can override those from this file!
+#   The files must end with '.cnf', otherwise they'll be ignored.
+#
 !includedir {{ mysql_config_include_dir }}
 {% endif %}
