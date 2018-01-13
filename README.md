@@ -44,6 +44,9 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 ```
 ├── README.md
 ├── ansible.cfg
+├── dotfiles
+│   ├── .bashrc
+│   └── .tmux.conf
 ├── inventory
 │   ├── dev.ini
 │   ├── group_vars
