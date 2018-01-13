@@ -30,71 +30,33 @@ defaults
   option  tcp-smart-connect
   option  tcpka
 
-  timeout check 10s
-  timeout client 3s
   timeout connect 1s
-  timeout queue 3s
-  timeout server 3s
+  timeout client 480m
+  timeout server 480m
+  timeout check 10s
+  timeout queue 480m
 
 ### stats
 listen stats
-  bind 0.0.0.0:4997
+  bind 0.0.0.0:80
   mode            http
   stats           enable
   stats           hide-version
   stats           refresh 60s
-  stats realm     Haproxy-Statistics
   stats uri       /admin?stats
 
+  timeout client 3s
+  timeout server 3s
+  timeout queue 3s
 
 listen mysql-cluster1-master
   bind 0.0.0.0:3306
   mode    tcp
   option  mysql-check user haproxy_user
-
-  timeout check 10s
-  timeout client 480m
-  timeout connect 1s
-  timeout queue 480m
-  timeout server 480m
-
-  server lod-db0001 lod-db0001:3306 check port 3306 inter 3000
+  server dev-db0001 dev-db0001:3306 check port 3306 inter 3000
 
 listen mysql-cluster1-slave
   bind 0.0.0.0:3307
   mode    tcp
   option  mysql-check user haproxy_user
-
-  timeout check 10s
-  timeout client 480m
-  timeout connect 1s
-  timeout queue 480m
-  timeout server 480m
-
-  server lod-db0002 lod-db0002:3306 check port 3306 inter 3000
-
-listen mysql-cluster2-master
-  bind 0.0.0.0:3316
-  mode    tcp
-  option  mysql-check user haproxy_user
-
-  timeout check 10s
-  timeout client 480m
-  timeout connect 1s
-  timeout queue 480m
-  timeout server 480m
-
-  server lod-db0011 lod-db0011:3306 check port 3306 inter 3000
-
-listen mysql-cluster2-slave
-  bind 0.0.0.0:3317
-  mode    tcp
-  option  mysql-check user haproxy_user
-
-  timeout check 10s
-  timeout client 480m
-  timeout connect 1s
-  timeout queue 480m
-  timeout server 480m
-
-  server lod-db0012 lod-db0012:3306 check port 3306 inter 3000
+  server dev-db0002 dev-db0002:3306 check port 3306 inter 3000

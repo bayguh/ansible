@@ -53,6 +53,18 @@
       with_items:
         - 0yum.cron
         - 0yum-daily.cron
+    # ドットファイルの配置
+    - name: Copy Dotfiles
+      tags: dotfiles
+      copy:
+        src: "../../dotfiles/{{ item }}"
+        dest: "/root/{{ item }}"
+        owner: "root"
+        group: "root"
+        mode: 0644
+      with_items:
+        - .bashrc
+        - .tmux.conf
 
 # フラグをみて実行するもの
 - name: Sub Common Role Execute

@@ -20,6 +20,8 @@ install_common_package_list:
     state: latest
   - name: telnet
     state: latest
+  - name: tcpdump
+    status: latest
   - name: zlib-devel
   - name: bzip2
   - name: bzip2-devel
@@ -74,8 +76,8 @@ install_consul_extra_opts: ""
 gcloud_install_flag: true
 
 # google SDK設定
-install_google_cloud_sdk_version: 170.0.1
-install_google_cloud_sdk_sha256sum: a09ff738ea9b3c9af906ee42e8ded48b84388574944d11406ba0cec6b2acdc89
+install_google_cloud_sdk_version: 183.0.0
+install_google_cloud_sdk_sha256sum: 6e5c76999ff3f14621d26e3c76967dc4c43613344947ab42fcc764311642c898
 
 # ===========================================================
 
