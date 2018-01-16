@@ -42,15 +42,15 @@
       mysql_innodb_buffer_pool_size: "{{ install_mysql_innodb_buffer_pool_size }}"
 
       mysql_skip_name_resolve: yes
-      mysql_mysqldump_max_allowed_packet: "64M"
-      mysql_max_connections: "300"
-      mysql_max_connect_errors: "1000000"
-      mysql_wait_timeout: "3600"
-      mysql_max_allowed_packet: "64M"
-      mysql_thread_cache_size: "100"
-      mysql_sort_buffer_size: "1M"
-      mysql_read_buffer_size: "1M"
-      mysql_read_rnd_buffer_size: "4M"
+      mysql_mysqldump_max_allowed_packet: "{{ install_mysql_mysqldump_max_allowed_packet }}"
+      mysql_max_connections: "{{ install_mysql_max_connections }}"
+      mysql_max_connect_errors: "{{ install_mysql_max_connect_errors }}"
+      mysql_wait_timeout: "{{ install_mysql_wait_timeout }}"
+      mysql_max_allowed_packet: "{{ install_mysql_max_allowed_packet }}"
+      mysql_thread_cache_size: "{{ install_mysql_thread_cache_size }}"
+      mysql_sort_buffer_size: "{{ install_mysql_sort_buffer_size }}"
+      mysql_read_buffer_size: "{{ install_mysql_read_buffer_size }}"
+      mysql_read_rnd_buffer_size: "{{ install_mysql_read_rnd_buffer_size }}"
 
       # replication
       mysql_server_id: "{{ replication_server_id | default(false) }}"

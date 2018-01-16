@@ -55,6 +55,17 @@ unittest_install_mysql_users:
 unittest_install_mysql_innodb_buffer_pool_size: "1G"
 unittest_install_mysql_slow_query_time: "0.5"
 
+# my.cnf
+install_mysql_mysqldump_max_allowed_packet: "64M"
+install_mysql_max_connections: "300"
+install_mysql_max_connect_errors: "1000000"
+install_mysql_wait_timeout: "3600"
+install_mysql_max_allowed_packet: "64M"
+install_mysql_thread_cache_size: "100"
+install_mysql_sort_buffer_size: "1M"
+install_mysql_read_buffer_size: "1M"
+install_mysql_read_rnd_buffer_size: "4M"
+
 #=========================================
 
 

@@ -11,24 +11,15 @@
       nginx_conf_template: ../../../extends_nginx.conf.j2
 
       # nginx.conf
-      nginx_keepalive_timeout: "650"
-      nginx_log_format: |
-        'time:$time_iso8601\t'
-        'method:$request_method\t'
-        'status:$status\t'
-        'remote_host:$remote_addr\t'
-        'forwardedfor:$http_x_forwarded_for\t'
-        'reqsize:$request_length\t'
-        'total_size:$bytes_sent\t'
-        'size:$body_bytes_sent\t'
-        'reqtime:$request_time\t'
-        'apptime:$upstream_response_time\t'
-        'reqhost:$http_host\t'
-        'uri:$request_uri\t'
-        'query:$query_string\t'
-        'referer:$http_referer\t'
-        'ua:$http_user_agent\t'
-        'hostname:$hostname\t'
+      nginx_worker_processes: "{{ ansible_processor_vcpus | default(ansible_processor_count) }}"
+      nginx_worker_connections: "{{ install_nginx_worker_connections }}"
+      nginx_extra_conf_options: "{{ install_nginx_extra_conf_options }}"
+      nginx_server_names_hash_bucket_size: "{{ install_nginx_server_names_hash_bucket_size }}"
+      nginx_client_max_body_size: "{{ install_nginx_client_max_body_size }}"
+      nginx_keepalive_timeout: "{{ install_nginx_keepalive_timeout }}"
+      nginx_log_format: "{{ install_nginx_log_format }}"
+      nginx_server_tokens: "{{ install_nginx_server_tokens }}"
+      nginx_extra_http_options: "{{ install_nginx_extra_http_options }}"
 
       # conf.d/*.conf
       nginx_vhosts: "{{ install_nginx_vhosts }}"

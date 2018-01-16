@@ -2,6 +2,45 @@
 # nginxバージョン
 install_nginx_package_name: "nginx-1.12.2"
 
+# nginx.conf
+install_nginx_worker_connections: 8192
+install_nginx_extra_conf_options: |-
+  worker_rlimit_nofile  32768;
+
+install_nginx_server_names_hash_bucket_size: "64"
+install_nginx_client_max_body_size: "64m"
+install_nginx_keepalive_timeout: "650"
+install_nginx_log_format: |-
+  'time:$time_iso8601\t'
+  'method:$request_method\t'
+  'status:$status\t'
+  'remote_host:$remote_addr\t'
+  'forwardedfor:$http_x_forwarded_for\t'
+  'reqsize:$request_length\t'
+  'total_size:$bytes_sent\t'
+  'size:$body_bytes_sent\t'
+  'reqtime:$request_time\t'
+  'apptime:$upstream_response_time\t'
+  'reqhost:$http_host\t'
+  'uri:$request_uri\t'
+  'query:$query_string\t'
+  'referer:$http_referer\t'
+  'ua:$http_user_agent\t'
+  'hostname:$hostname\t'
+install_nginx_server_tokens: "off"
+install_nginx_extra_http_options: |-
+  charset UTF-8;
+
+  set_real_ip_from   130.211.0.0/22;  # Google LB
+  set_real_ip_from   35.191.0.0/16;   # Google LB
+  real_ip_header     X-Forwarded-For;
+  real_ip_recursive  on;
+
+  # セキュリティ対策
+  add_header X-XSS-Protection "1; mode=block"; # XSS 対策
+  add_header X-Content-Type-Options nosniff;   # Sniffing 対策
+  add_header Cache-Control private;            # プロキシーキャッシュ対策
+
 # サーバ名
 setting_server_name: web.bayguh.jp
 
@@ -9,17 +48,28 @@ setting_server_name: web.bayguh.jp
 install_nginx_vhosts:
   - listen: 80
     server_name: "{{ setting_server_name }}"
-    extra_parameters: |
+    root: /var/www/app/current
+    extra_parameters: |-
       location ~ \.php$ {
-          root   /var/www/app/current;
           fastcgi_pass unix:/var/run/php-fpm/php-fpm.sock;
           fastcgi_index index.php;
-          fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+          fastcgi_param SCRIPT_FILENAME $realpath_root/$fastcgi_script_name;
           include fastcgi_params;
+
+          fastcgi_connect_timeout       3;
+          fastcgi_send_timeout          10;
+          fastcgi_read_timeout          10;
+          fastcgi_buffer_size           16k;
+          fastcgi_buffers               4 256k;
+          fastcgi_busy_buffers_size     256k;
+          fastcgi_temp_file_write_size  256k;
+
+          fastcgi_cache_key             "$scheme://$host$request_uri";
+          fastcgi_cache_valid           200 10m;
+          fastcgi_cache_valid           404 1m;
       }
 
       location / {
-          root   /var/www/app/current;
           index  index.php;
 
           if (!-e \$request_filename) {
@@ -35,7 +85,7 @@ install_nginx_vhosts:
   - listen: 80
     filename: "status.conf"
     server_name: "127.0.0.1"
-    extra_parameters: |
+    extra_parameters: |-
       # nginx status
       location /nginx_status {
           stub_status on;
@@ -67,25 +117,39 @@ install_nginx_vhosts:
   - listen: 80
     filename: "health_check.conf"
     server_name: "{{ ansible_eth0.ipv4.address }}"
-    extra_parameters: |
-      root   /var/www/app/current;
-      access_log /var/log/nginx/helth_check.log main;
-
+    root: /var/www/app/current
+    access_log: /var/log/nginx/helth_check.log main
+    extra_parameters: |-
       location ~ \.php$ {
-          root   /var/www/app/current;
           fastcgi_pass unix:/var/run/php-fpm/php-fpm.sock;
           fastcgi_index index.php;
-          fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+          fastcgi_param SCRIPT_FILENAME $realpath_root/$fastcgi_script_name;
           include fastcgi_params;
+
+          fastcgi_connect_timeout       3;
+          fastcgi_send_timeout          10;
+          fastcgi_read_timeout          10;
+          fastcgi_buffer_size           16k;
+          fastcgi_buffers               4 256k;
+          fastcgi_busy_buffers_size     256k;
+          fastcgi_temp_file_write_size  256k;
+
+          fastcgi_cache_key             "$scheme://$host$request_uri";
+          fastcgi_cache_valid           200 10m;
+          fastcgi_cache_valid           404 1m;
       }
 
       location / {
-          root   /var/www/app/current;
           index  index.php;
 
           if (!-e $request_filename) {
               rewrite ^(.*)$ /index.php?q=$1 last;
           }
+      }
+
+      error_page   500 502 503 504  /50x.html;
+      location = /50x.html {
+          root   /usr/share/nginx/html;
       }
 
 #=========================================
