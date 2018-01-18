@@ -38,11 +38,6 @@
   name: packer
   version: master
 
-# https://galaxy.ansible.com/linuxhq/postfix/
-- src: linuxhq.postfix
-  name: postfix
-  version: master
-
 # https://galaxy.ansible.com/nickhammond/logrotate/
 - src: nickhammond.logrotate
   name: logrotate
@@ -144,6 +139,11 @@
 # - src: geerlingguy.haproxy
 #   name: haproxy
 #   version: 1.1.1
+
+# https://galaxy.ansible.com/linuxhq/postfix/
+# - src: linuxhq.postfix
+#   name: postfix
+#   version: master
 
 # ==========================================================================
 

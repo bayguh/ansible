@@ -133,6 +133,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   ├── php_version_check
 │   ├── php-fpm_status
 │   ├── pip
+│   ├── postfix
 │   ├── redis
 │   └── galaxy
 │       ├── anyenv
