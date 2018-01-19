@@ -237,3 +237,11 @@ gitlab_rails['env'] =
 {% if gitlab_log_directory is defined %}gitlab_rails['log_directory'] = "{{ gitlab_log_directory }}"
 {% endif %}
 {% endif %}
+
+gitlab_rails['rack_attack_git_basic_auth'] = {
+   'enabled' => false,
+   'ip_whitelist' => ["127.0.0.1"],
+   'maxretry' => 100,
+   'findtime' => 60,
+   'bantime' => 60
+}
