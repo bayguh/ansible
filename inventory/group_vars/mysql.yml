@@ -152,3 +152,5 @@ install_datadog_checks:
       - server: 127.0.0.1
         user: datadog_user
         pass: "datadog_user"
+        options:
+          replication: true
