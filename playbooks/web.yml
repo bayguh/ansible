@@ -20,6 +20,7 @@
       nginx_log_format: "{{ install_nginx_log_format }}"
       nginx_server_tokens: "{{ install_nginx_server_tokens }}"
       nginx_extra_http_options: "{{ install_nginx_extra_http_options }}"
+      nginx_access_log: "/var/log/nginx/access.log main"
 
       # conf.d/*.conf
       nginx_vhosts: "{{ install_nginx_vhosts }}"
