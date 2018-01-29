@@ -93,6 +93,11 @@
   name: newrelic
   version: 1.7.0
 
+# https://galaxy.ansible.com/manala/locales/
+- src: manala.locales
+  name: locale
+  version: 1.0.2
+
 # 修正して使用(roles以下)=======================================================
 
 # # https://galaxy.ansible.com/Stouts/limits/

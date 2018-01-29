@@ -18,6 +18,10 @@
     # timezone設定
     - { role: ../../roles/galaxy/ntp, ntp_timezone: Asia/Tokyo, tags: ntp }
 
+    # localeの設定
+    - { role: ../../roles/galaxy/locale, manala_locales_codes_default: ja_JP.UTF8, manala_locales_codes_default_file: /etc/sysconfig/i18n, when: ansible_distribution_major_version == "6", tags: locale }
+    - { role: ../../roles/galaxy/locale, manala_locales_codes_default: ja_JP.UTF8, manala_locales_codes_default_file: /etc/locale.conf, when: ansible_distribution_major_version == "7", tags: locale }
+
     # 作業ユーザの作成
     - role: ../../roles/galaxy/users_and_groups
       users_and_groups:
