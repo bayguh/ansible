@@ -1,2 +1,4 @@
 # 環境変数
 env_variable: dev
+
+install_mysql_log_queries_not_using_indexes: "1"

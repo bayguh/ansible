@@ -33,7 +33,8 @@
       mysql_slow_query_log_enabled: true
       mysql_slow_query_log_file: "{{ mysql_log_dir }}/mysql-slow.log"
       mysql_slow_query_time: "{{ install_mysql_slow_query_time }}"
-      mysql_innodb_buffer_pool_size: "{{ unittest_install_mysql_innodb_buffer_pool_size }}"
+      mysql_log_queries_not_using_indexes: "{{ install_mysql_log_queries_not_using_indexes }}"
+      mysql_innodb_buffer_pool_size: "{{ install_mysql_innodb_buffer_pool_size }}"
 
       mysql_skip_name_resolve: yes
       mysql_mysqldump_max_allowed_packet: "{{ install_mysql_mysqldump_max_allowed_packet }}"

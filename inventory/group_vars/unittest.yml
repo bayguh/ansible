@@ -52,8 +52,9 @@ unittest_install_mysql_users:
     priv: "*.*:SELECT,PROCESS,REPLICATION CLIENT"
 
 # innodb buffer サイズ
-unittest_install_mysql_innodb_buffer_pool_size: "1G"
-unittest_install_mysql_slow_query_time: "0.5"
+install_mysql_innodb_buffer_pool_size: "1G"
+install_mysql_slow_query_time: "0.5"
+install_mysql_log_queries_not_using_indexes: "1"
 
 # my.cnf
 install_mysql_mysqldump_max_allowed_packet: "64M"

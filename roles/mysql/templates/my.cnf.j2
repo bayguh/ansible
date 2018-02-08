@@ -83,6 +83,7 @@ slow_query_log                 = 0
 {% endif %}
 long_query_time                = {{ mysql_slow_query_time }}
 slow_query_log_file            = {{ mysql_slow_query_log_file }}
+log-queries-not-using-indexes  = {{ mysql_log_queries_not_using_indexes }}
 
 {% if mysql_replication_role == 'master' %}
 # バイナリログ
