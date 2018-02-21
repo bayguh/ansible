@@ -30,25 +30,25 @@ install_mysql_packages_not_version:
   - mysql-community-common
 
 # mysqlユーザ
-mysql_root_user_password: "root"
-mysql_replication_user_password: "replication_user"
+mysql_root_user_password: "{{ root_user_password_vault }}"
+mysql_replication_user_password: "{{ replication_user_password_vault }}"
 mysql_replication_user_host: "10.0.%"
 install_mysql_users:
   - name: deploy_user
     host: "10.0.%"
-    password: "deploy_user"
+    password: "{{ deploy_user_password_vault }}"
     priv: "*.*:INSERT,UPDATE,DELETE,CREATE,DROP,SELECT,ALTER,INDEX,SHOW VIEW,LOCK TABLES"
   - name: update_user
     host: "10.0.%"
-    password: "update_user"
+    password: "{{ update_user_password_vault }}"
     priv: "*.*:INSERT,UPDATE,DELETE,SELECT"
   - name: select_user
     host: "10.0.%"
-    password: "select_user"
+    password: "{{ select_user_password_vault }}"
     priv: "*.*:SELECT"
   - name: mha_user
     host: "10.0.%"
-    password: "mha_user"
+    password: "{{ mha_user_password_vault }}"
     priv: "*.*:INSERT,UPDATE,DELETE,CREATE,SELECT,SUPER,REPLICATION CLIENT,RELOAD"
   - name: mackerel_user
     host: "127.0.0.1"
@@ -56,7 +56,7 @@ install_mysql_users:
     priv: "*.*:SELECT,PROCESS,REPLICATION CLIENT"
   - name: datadog_user
     host: "127.0.0.1"
-    password: "datadog_user"
+    password: "{{ datadog_user_password_vault }}"
     priv: "*.*:SELECT,PROCESS,REPLICATION CLIENT"
   - name: haproxy_user
     host: "10.0.%"
@@ -152,6 +152,6 @@ install_datadog_checks:
     instances:
       - server: 127.0.0.1
         user: datadog_user
-        pass: "datadog_user"
+        pass: "{{ datadog_user_password_vault }}"
         options:
           replication: true

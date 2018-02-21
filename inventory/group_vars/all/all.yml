@@ -61,7 +61,7 @@ consul_install_flag: true
 
 # consul設定
 install_consul_version: 1.0.0
-install_consul_encrypt_key: "jPHxtd3WAIDpNUKTwCa+Uw=="
+install_consul_encrypt_key: "{{ consul_encrypt_key_vault }}"
 install_consul_bind_ip: "0.0.0.0"
 install_consul_disable_remote_exec: false
 install_consul_datacenter: "bayguh"
@@ -85,7 +85,7 @@ install_google_cloud_sdk_sha256sum: 6e5c76999ff3f14621d26e3c76967dc4c43613344947
 mackerel_flag: false
 
 # mackerel-agent-apikey (https://mackerel.io/orgs/[プロジェクト名]?tab=apikeys)
-install_mackerel_agent_apikey: "api_key"
+install_mackerel_agent_apikey: "{{ mackerel_agent_apikey_vault }}"
 install_mackerel_agent_roles: ["{{ env_variable }}:{{ server }}"]
 
 # mackerel agent設定
@@ -107,7 +107,7 @@ install_datadog_agent6: false
 # agent version
 install_datadog_agent_version: "5.18.1-1"
 # api key (https://app.datadoghq.com/account/settings#api)
-install_datadog_api_key: "api_key"
+install_datadog_api_key: "{{ datadog_api_key_vault }}"
 # agent running設定
 install_datadog_enabled: true
 
@@ -171,7 +171,7 @@ install_datadog_checks:
 newrelic_flag: false
 
 # licence key (https://rpm.newrelic.com/accounts/[プロジェクト番号])
-install_newrelic_license_key: "license_key"
+install_newrelic_license_key: "{{ newrelic_license_key_vault }}"
 # agent running設定
 install_newrelic_service_state: started
 install_newrelic_labels:

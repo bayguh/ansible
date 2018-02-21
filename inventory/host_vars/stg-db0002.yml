@@ -6,7 +6,7 @@ replication_master_host: "stg-db0001"
 # mackerel設定
 install_mackerel_check_plugins:
   check-ntpoffset: "/usr/local/bin/check-ntpoffset -w=500"
-  check-mysql-replication: "/usr/local/bin/check-mysql replication --host=127.0.0.1 --user=mackerel_user --password='mackerel_user' --warning=60"
+  check-mysql-replication: "/usr/local/bin/check-mysql replication --host=127.0.0.1 --user=mackerel_user --password='{{ mackerel_user_password_vault }}' --warning=60"
 
   check-procs-mysqld: "/usr/local/bin/check-procs --pattern /usr/sbin/mysqld"
 

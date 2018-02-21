@@ -2,7 +2,7 @@
 env_variable: prd
 
 # consul設定
-install_consul_encrypt_key: "zvjgw68NYEWkXiJUwv2rVg=="
+install_consul_encrypt_key: "{{ consul_encrypt_key_vault }}"
 install_consul_datacenter: "bayguh-{{ env_variable }}"
 install_consul_nodes:
   - 'consul0001'

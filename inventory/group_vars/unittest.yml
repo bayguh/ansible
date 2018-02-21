@@ -32,23 +32,27 @@ unittest_install_mysql_packages_not_version:
   - mysql-community-common
 
 # mysqlユーザ
-unittest_mysql_root_user_password: "root"
+unittest_mysql_root_user_password: "{{ unittest_root_user_password_vault }}"
 unittest_install_mysql_users:
   - name: deploy_user
     host: "172.%"
-    password: "deploy_user"
+    password: "{{ unittest_deploy_user_password_vault }}"
     priv: "*.*:INSERT,UPDATE,DELETE,CREATE,DROP,SELECT,ALTER,INDEX,SHOW VIEW,LOCK TABLES"
   - name: update_user
     host: "172.%"
-    password: "update_user"
+    password: "{{ unittest_update_user_password_vault }}"
     priv: "*.*:INSERT,UPDATE,DELETE,SELECT"
   - name: select_user
     host: "172.%"
-    password: "select_user"
+    password: "{{ unittest_select_user_password_vault }}"
     priv: "*.*:SELECT"
   - name: mackerel_user
     host: "127.0.0.1"
-    password: "mackerel_user"
+    password: "{{ unittest_mackerel_user_password_vault }}"
+    priv: "*.*:SELECT,PROCESS,REPLICATION CLIENT"
+  - name: datadog_user
+    host: "127.0.0.1"
+    password: "{{ unittest_datadog_user_password_vault }}"
     priv: "*.*:SELECT,PROCESS,REPLICATION CLIENT"
 
 # innodb buffer サイズ

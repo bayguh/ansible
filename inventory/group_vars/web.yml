@@ -72,7 +72,7 @@ install_nginx_vhosts:
       location / {
           index  index.php;
 
-          if (!-e \$request_filename) {
+          if (!-e $request_filename) {
               rewrite ^(.+)$ /index.php?\$1 last;
           }
       }

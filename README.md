@@ -24,7 +24,15 @@ ansible version: 2.4.1.0
     インストールディレクトリ: roles/galaxy
 ```
 
-4. 実行
+4. ansible vault用のパスワードを記載したファイルを配置 (例. keys/password.txt)
+```
+echo "[いつものパスワード]"" >> ./keys/password.txt
+
+# 暗号化されたファイルを見る方法(暗号化されたファイルはファイル名のサフィックスが -vault.yml になっている)
+# ex.)
+ansible-vault view group_vars/all/all-vault.yml
+
+5. 実行
 
 `ansible-playbook -i [インベントリファイル] site.yml -e "server=[実行環境]"`
 
@@ -50,7 +58,6 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 ├── inventory
 │   ├── dev.ini
 │   ├── group_vars
-│   │   ├── all.yml
 │   │   ├── ansible.yml
 │   │   ├── consul.yml
 │   │   ├── deploy.yml
@@ -64,14 +71,21 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   │   ├── redis.yml
 │   │   ├── unittest.yml
 │   │   ├── web.yml
+│   │   ├── all
+│   │   │   ├── all.yml
+│   │   │   └── all-vault.yml
 │   │   ├── dev
-│   │   │   └── dev.yml
+│   │   │   ├── dev.yml
+│   │   │   └── dev-vault.yml
 │   │   ├── prd
-│   │   │   └── prd.yml
+│   │   │   ├── prd.yml
+│   │   │   └── prd-vault.yml
 │   │   ├── shd
-│   │   │   └── shd.yml
+│   │   │   ├── shd.yml
+│   │   │   └── shd-vault.yml
 │   │   └── stg
-│   │       └── stg.yml
+│   │   │   ├── stg.yml
+│   │   │   └── stg-vault.yml
 │   ├── host_vars
 │   │   ├── db0001.yml
 │   │   ├── db0002.yml
@@ -85,6 +99,7 @@ http://qiita.com/kotarella1110/items/79af4485bd7985935d6b
 │   ├── shd.ini
 │   └── stg.ini
 ├── keys
+│   ├── password.txt
 │   ├── deploy
 │   │   ├── id_rsa
 │   │   └── id_rsa.pub

@@ -9,3 +9,4 @@ chain_certificate.pem
 private.key
 .DS_Store
 id_rsa*
+password.txt
