@@ -102,3 +102,17 @@
     - name: Update /var/www Directory
       file: path=/var/www state=directory owner="{{ public_execute_user }}" group="{{ public_execute_user }}" mode=0755
       tags: directory
+
+    - name: Change permission /var/log/php-fpm Directory
+      file:
+        path: /var/log/php-fpm
+        state: directory
+        mode: 0775
+      tags: directory
+
+    - name: Change permission /var/log/php-fpm/error.log file
+      file:
+        path: /var/log/php-fpm/error.log
+        state: file
+        mode: 0644
+      tags: directory
