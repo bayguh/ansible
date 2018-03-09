@@ -33,7 +33,7 @@
     # datadogインストール
     - role: ../../roles/galaxy/datadog
       when: datadog_flag
-      datadog_agent6: "{{ install_datadog_agent6 }}"
+      datadog_agent5: "{{ install_datadog_agent5 }}"
       datadog_agent_version: "{{ install_datadog_agent_version }}"
       datadog_api_key: "{{ install_datadog_api_key }}"
       datadog_enabled: "{{ install_datadog_enabled }}"

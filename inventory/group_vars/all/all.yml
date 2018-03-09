@@ -68,7 +68,7 @@ install_consul_datacenter: "bayguh"
 install_consul_node_type: "client"
 install_consul_nodes:
   - 'consul0001'
-install_consul_service_name: "{{ server }}"
+install_consul_service_name: "{{ install_consul_datacenter }}"
 install_consul_service_tags: [ "{{ server }}", "{{ env_variable }}" ]
 install_consul_extra_opts: ""
 
@@ -103,9 +103,9 @@ install_mackerel_check_plugins:
 datadog_flag: false
 
 # agent 5 or 6
-install_datadog_agent6: false
+install_datadog_agent5: false
 # agent version
-install_datadog_agent_version: "5.18.1-1"
+install_datadog_agent_version: "6.0.2-1"
 # api key (https://app.datadoghq.com/account/settings#api)
 install_datadog_api_key: "{{ datadog_api_key_vault }}"
 # agent running設定
@@ -115,6 +115,7 @@ install_datadog_enabled: true
 install_datadog_config:
   tags: "env:{{ env_variable }}, server_type:{{ server }}"
   log_level: INFO
+  hostname: "{{ inventory_hostname }}"
 install_datadog_config_ex: {}
 install_datadog_checks:
   process:
