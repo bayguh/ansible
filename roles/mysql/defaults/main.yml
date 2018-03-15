@@ -94,6 +94,8 @@ mysql_expire_logs_days: "0"
 mysql_max_binlog_size: "1G"
 mysql_binlog_format: "ROW"
 
+mysql_slave_parallel_workers: "0"
+
 ##--------------------------------------------------------------------
 # CacheとMemory
 ##--------------------------------------------------------------------
@@ -127,6 +129,7 @@ mysql_innodb_max_dirty_pages_pct: "75"
 mysql_innodb_adaptive_hash_index: "1"
 mysql_innodb_adaptive_flushing: "1"
 mysql_innodb_io_capacity: "200"
+mysql_innodb_io_capacity_max: "2000"
 mysql_innodb_autoinc_lock_mode: "1"
 
 ##--------------------------------------------------------------------

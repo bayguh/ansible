@@ -101,6 +101,10 @@ binlog_format                  = {{ mysql_binlog_format }}
 read_only
 relay-log                      = relay-bin
 relay-log-index                = relay-bin.index
+
+slave_parallel_workers         = {{ mysql_slave_parallel_workers }}
+slave_parallel_type            = LOGICAL_CLOCK
+slave_preserve_commit_order    = 1
 {% endif %}
 
 ##--------------------------------------------------------------------
@@ -174,6 +178,7 @@ innodb_adaptive_flushing       = {{ mysql_innodb_adaptive_flushing }}
 
 # insert bufferからInnoDBのBackgroundタスクのI/O上限値を設定
 innodb_io_capacity             = {{ mysql_innodb_io_capacity }}
+innodb_io_capacity_max         = {{ mysql_innodb_io_capacity_max }}
 
 # auto-incrementの値を生成するときにlock modeを決める
 innodb_autoinc_lock_mode       = {{ mysql_innodb_autoinc_lock_mode }}

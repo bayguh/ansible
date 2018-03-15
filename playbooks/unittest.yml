@@ -35,6 +35,9 @@
       mysql_slow_query_time: "{{ install_mysql_slow_query_time }}"
       mysql_log_queries_not_using_indexes: "{{ install_mysql_log_queries_not_using_indexes }}"
       mysql_innodb_buffer_pool_size: "{{ install_mysql_innodb_buffer_pool_size }}"
+      mysql_innodb_io_capacity: "{{ install_mysql_innodb_io_capacity }}"
+      mysql_innodb_io_capacity_max: "{{ install_mysql_innodb_io_capacity_max }}"
+      mysql_innodb_write_io_threads: "{{ install_mysql_innodb_write_io_threads }}"
 
       mysql_skip_name_resolve: yes
       mysql_mysqldump_max_allowed_packet: "{{ install_mysql_mysqldump_max_allowed_packet }}"
